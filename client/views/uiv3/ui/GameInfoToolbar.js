@@ -38,6 +38,10 @@ const styles = theme => ({
       }
     }
   }
+  , compressedRow: {
+    display: "flex"
+    , flexDirection: "row"
+  }
   , row: {
     display: 'flex'
     , flexFlow: 'row wrap'
@@ -123,7 +127,7 @@ export const GameToolbar = ({classes, game, compressControls}) => {
         </div>
       </div>
       {compressControls.compress && (
-        <Fragment>
+        <div className={classes.compressedRow}>
           <Typography className={classes.statement}>
             <span className={classes.value}>{T.translate('Game.Phase.' + game.status.phase)}</span>
           </Typography>
@@ -137,7 +141,7 @@ export const GameToolbar = ({classes, game, compressControls}) => {
             <span className={classes.value}>{renderTime(game)}</span>
             <ToggleCompress {...compressControls}/>
           </Typography>
-        </Fragment>
+        </div>
       )}
     </div>
   );

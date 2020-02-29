@@ -87,7 +87,7 @@ export const RouteMain = ({classes}) => {
       <Paper className={classes.rowOnline}>
         <OnlineWidget/>
       </Paper>
-      <Grid className={classes.root} container spacing={8}>
+      <Grid className={classes.root} direction={(window.innerWidth < 1000)?"column":"row"} container spacing={8}>
         <Grid xs item container className={classes.column}>
           <Paper className={classes.columnPaper}>
             <Typography className={classes.columnTitle} variant="h4">{T.translate('App.Rooms.Rooms')}: <CreateRoom/>

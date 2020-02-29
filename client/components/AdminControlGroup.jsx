@@ -15,15 +15,19 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import RoomSection from "./AdminControlGroupSections/RoomSection";
 import GameSection from "./AdminControlGroupSections/GameSection";
+import Divider from "@material-ui/core/Divider";
 
 const styles = theme => ({});
 
-export const AdminMenu = ({room}) => (
-  <AppBarMenu text='admin'>
-    {room && !room.gameId && <RoomSection/>}
-    {room && !!room.gameId && <GameSection/>}
-  </AppBarMenu>
-);
+export const AdminMenu = ({room}) => {
+    if (room) return (
+        <List text='admin'>
+            {<Divider/>}
+            {!room.gameId && <RoomSection/>}
+            {!!room.gameId && <GameSection/>}
+        </List>)
+    else return null;
+};
 
 // export class AdminPanel extends Component {
 //   constructor(props) {
@@ -65,21 +69,21 @@ export const AdminMenu = ({room}) => (
 // }
 
 export default compose(
-  connect(
-    (state) => {
-      const userId = state.getIn(['user', 'id'], '%USERNAME%');
-      const roomId = state.get('room');
-      const room = state.getIn(['rooms', roomId]);
-      const hidden = !state.getIn(['app', 'adminMode']);
-      return {
-        roomId
-        , userId
-        , room
-        , hidden
-        //, online: state.getIn(['online'], Map())
-      }
-    }
-    , (dispatch) => ({})
-  )
-  , branch(get('hidden'), renderNothing)
+    connect(
+        (state) => {
+            const userId = state.getIn(['user', 'id'], '%USERNAME%');
+            const roomId = state.get('room');
+            const room = state.getIn(['rooms', roomId]);
+            const hidden = !state.getIn(['app', 'adminMode']);
+            return {
+                roomId
+                , userId
+                , room
+                , hidden
+                //, online: state.getIn(['online'], Map())
+            }
+        }
+        , (dispatch) => ({})
+    )
+    , branch(get('hidden'), renderNothing)
 )(AdminMenu);

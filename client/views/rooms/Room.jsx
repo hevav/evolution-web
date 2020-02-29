@@ -37,11 +37,10 @@ const styles = theme => ({
     flex: '1 1 0'
   }
   , column: {
-    flexFlow: 'column nowrap'
   }
   , columnPaper: {
     padding: theme.spacing.unit
-    , flex: '1'
+    , width: '100%'
   }
   , columnSettings: {
     flex: '1 1 0'
@@ -80,17 +79,17 @@ export class Room extends React.PureComponent {
           <RoomStartVotingTimer room={room} />
         </Typography>
         <Grid container className={classes.container} spacing={8}>
-          <Grid container item className={classes.column} xs={4}>
+          <Grid container item className={classes.column} md={4} xs={12}>
             <Paper className={classes.columnPaper + ' ' + classes.columnSettings}>
               <RoomSettings roomId={room.id} />
             </Paper>
           </Grid>
-          <Grid container item className={classes.column} xs={4}>
+          <Grid container item className={classes.column} md={4} xs={12}>
             <Paper className={classes.columnPaper}>
               <Chat chatTargetType='ROOM' roomId={room.id} />
             </Paper>
           </Grid>
-          <Grid container item className={classes.column} xs={4}>
+          <Grid container item className={classes.column} md={4} xs={12}>
             <Paper className={classes.columnPaper}>
               <Typography variant='h6'>
                 {T.translate('App.Room.Players')} ({room.users.size}/{room.settings.maxPlayers}):

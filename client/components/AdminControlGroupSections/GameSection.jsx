@@ -3,10 +3,11 @@ import {connect} from 'react-redux';
 import {Map, List, fromJS} from 'immutable';
 import Button from "@material-ui/core/Button/Button";
 import {debugMirrorPlayer} from '../../actions/debug';
+import MenuItem from "@material-ui/core/MenuItem";
 
 export const GameSection = ({debugMirrorPlayer}) => (
   <div>
-    <Button onClick={debugMirrorPlayer}>Mirror player</Button>
+    <MenuItem onClick={debugMirrorPlayer}>Mirror player</MenuItem>
   </div>
 );
 

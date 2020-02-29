@@ -26,6 +26,8 @@ import {
 } from '../../../shared/actions/actions';
 import {failsChecks} from '../../../shared/actions/checks';
 import {checkCanJoinRoomToPlay} from '../../../shared/actions/rooms.checks';
+import List from "@material-ui/core/List";
+import Divider from "@material-ui/core/Divider";
 
 const styles = theme => ({
   menuItem: {
@@ -63,14 +65,8 @@ export const RoomControlGroupMenu = compose(
      , $back, $exit, $start, $roomJoin, $roomSpectate
    }) => (
     <>
-      <Button color='primary'
-              variant='contained'
-              onClick={openMenu}>
-        {T.translate('App.Room.Room')}
-      </Button>
-      <Menu open={Boolean(anchorEl)}
-            anchorEl={anchorEl}
-            onClose={closeMenu}>
+      <List>
+        <Divider/>
         <ListItem className={classes.menuItem}>
           <ListItemText classes={{root: classes.menuItemText, primary: classes.menuItemTextPrimary}} primary={text}/>
           {/*<Typography className={classes.menuItem}>{text}</Typography>*/}
@@ -95,7 +91,7 @@ export const RoomControlGroupMenu = compose(
         </MenuItem>}
 
         <MenuItem onClick={$exit}>{T.translate('App.Room.$Exit')}</MenuItem>
-      </Menu>
+      </List>
     </>
   ));
 

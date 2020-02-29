@@ -5,6 +5,8 @@ import {Map, List, fromJS} from 'immutable';
 import {roomSetSeedRequest, roomStartVotingRequest} from '../../../shared/actions/actions';
 import Input from "@material-ui/core/Input";
 import Button from "@material-ui/core/Button";
+import ListItem from "@material-ui/core/ListItem";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const defaultGameSeed = `deck: 12 carnivorous, 6 sharp
 phase: feeding
@@ -32,15 +34,15 @@ export class RoomSection extends Component {
   render() {
     return <div>
       {this.props.gameCanStart
-        ? <Button variant='outlined'
-                  fullWidth={true}
+        ? <MenuItem
                   onClick={this.props.$start(this.props.roomId, this.state.gameSeed)}>
           Start Game
-        </Button>
+        </MenuItem>
         : null}
       <Input
         multiline={true}
         fullWidth={true}
+        style={{padding: "24px"}}
         value={this.state.gameSeed}
         onChange={(e) => this.setGameSeed(e.target.value)}/>
     </div>

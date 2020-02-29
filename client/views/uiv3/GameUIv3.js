@@ -71,11 +71,9 @@ const styles = theme => ({
     , '&.PlayersList': {
       overflowY: 'auto'
       , minWidth: 180
-      , maxWidth: 340
     }
     , '&.Toolbar': {
       minWidth: 250
-      , maxWidth: 360
     }
     , '&.Chat': {
       minWidth: 200
@@ -109,7 +107,6 @@ const styles = theme => ({
   , gridPlayers: {
     flex: '1 1 auto'
     , display: 'flex'
-    , flexFlow: 'row wrap'
   }
   , gridHand: {}
 
@@ -120,7 +117,6 @@ const styles = theme => ({
     , margin: 2
 
     , flex: '1 1 0'
-    , minWidth: GameStyles.defaultWidth * 4
 
     , textAlign: 'center'
   }
@@ -157,12 +153,12 @@ export const GameUIv3 = ({classes, game, compress, toggleCompress}) => {
         <QuestionDefence />
 
         <Grid item className={cn(classes.gridMiscRow, {'Compressed': compress})}>
-          {!compress && <Paper className={cn(classes.gridMiscItem, 'PlayersList', {'Compressed': compress})}>
-            <PlayersList game={game} />
-          </Paper>}
           <Paper className={cn(classes.gridMiscItem, 'Toolbar', {'Compressed': compress})}>
             <GameInfoToolbar game={game} compressControls={{compress, toggleCompress}} />
           </Paper>
+          {!compress && <Paper className={cn(classes.gridMiscItem, 'PlayersList', {'Compressed': compress})}>
+            <PlayersList game={game} />
+          </Paper>}
           <div className={classes.gridMiscSubRow}>
             {!game.isPlantarium() && <Paper className={cn(classes.gridMiscItem, 'Food', {'Compressed': compress})}>
               <FoodWrapper game={game} />
@@ -172,7 +168,7 @@ export const GameUIv3 = ({classes, game, compress, toggleCompress}) => {
             </Paper>
           </div>
         </Grid>
-        <Grid item className={classes.gridPlayers}>
+        <Grid container direction={(window.innerWidth < 1000)?"column":"row"} className={classes.gridPlayers}>
           {game.isPlantarium() && <PlantsWrapper game={game} classes={classes} />}
           {game.sortPlayersFromIndex(game.players, 0).map((player) => (
             (player.playing || player.continent.size > 0) &&

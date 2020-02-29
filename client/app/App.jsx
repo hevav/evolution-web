@@ -24,7 +24,6 @@ const styles = theme => ({
   , content: {
     flexGrow: 1
     //, padding: theme.spacing.unit
-    , overflow: 'hidden'
 
     , display: 'flex'
     , flexDirection: 'column'

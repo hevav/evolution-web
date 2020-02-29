@@ -20,6 +20,9 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
 import {branch, compose, renderNothing} from "recompose";
+import Divider from "@material-ui/core/Divider";
+import List from "@material-ui/core/List";
+import MenuItem from "@material-ui/core/MenuItem";
 
 export class GameScoreboardFinal extends React.PureComponent {
   constructor(props) {
@@ -39,12 +42,11 @@ export class GameScoreboardFinal extends React.PureComponent {
     const {game} = this.props;
 
     return <Fragment>
-      <Button className="ShowScoreboardFinal"
-                 variant='contained'
-                 color='secondary'
+      <Divider/>
+      <MenuItem className="ShowScoreboardFinal"
                  onClick={() => this.setState({show: true})}>
         {T.translate('Game.UI.Scores.Label')}
-      </Button>
+      </MenuItem>
       <Dialog open={this.state.show}>
         {this.state.show && <DialogTitle>
           {T.translate('Game.UI.Scores.Winner')}: <User id={game.winnerId} variant='simple'/>

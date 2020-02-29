@@ -21,14 +21,23 @@ import {SettingVolumeMenuItem} from "./SettingVolume";
 import {SettingUIv3MenuItem} from "./SettingUIv3";
 import LinkProfile from "../../components/profile/LinkProfile";
 import GuardUser from "../../components/GuardUser";
+import IconButton from "@material-ui/core/IconButton";
+import Drawer from "@material-ui/core/Drawer";
+import Divider from "@material-ui/core/Divider";
 
 const styles = theme => ({
   title: {
     overflow: 'hidden'
     , minWidth: '1em'
   }
+  , titleDrawer: {
+    margin: '24px'
+  }
   , appBarMenu: {
     margin: '5px'
+  }
+  , drawerItem: {
+    paddingLeft: '24px'
   }
   , portal: {
     whiteSpace: 'nowrap'
@@ -43,34 +52,42 @@ const styles = theme => ({
   }
 });
 
-export const AppBar = ({classes}) => (
+export const AppBar = function ({classes}) {
+  const [open, setOpen] = React.useState(false);
+  return (
   <MUIAppBar>
     <Toolbar>
-      {/*<TranslationSwitchView/>*/}
+      <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          onClick={()=>setOpen(!open)}>
+        <IconMenu/>
+      </IconButton>
       <div className={classes.title}>
         <EvoLink to='/' variant="h4" color="inherit">{T.translate('App.Name')}</EvoLink>
-        &nbsp;
-        <Typography inline variant="caption" color="inherit">v{GLOBAL_VERSION}</Typography>
       </div>
-
+    </Toolbar>
+    <Drawer
+        anchor="left"
+        open={open}
+        onClose={()=>setOpen(false)}>
+      <div className={classes.titleDrawer}>
+        <EvoLink to='/' variant="h4" color="inherit">
+          <Typography variant="h4">{T.translate('App.Name')}</Typography>
+        </EvoLink>
+        <Typography variant="caption" color="inherit">v{GLOBAL_VERSION}</Typography>
+      </div>
+      <Divider/>
       <GuardUser>
-        <AppBarMenu className={classes.appBarMenu} text={<IconMenu />}>
-          <SettingVolumeMenuItem />
-          <SettingUIv3MenuItem />
-          <LinkProfile />
-        </AppBarMenu>
+        <SettingVolumeMenuItem className={classes.drawerItem}/>
+        <SettingUIv3MenuItem className={classes.drawerItem}/>
+        <LinkProfile className={classes.drawerItem}/>
+        <RoomControlGroup className={classes.drawerItem}/>
+        <GameScoreboardFinal className={classes.drawerItem}/>
+        <AdminControlGroup className={classes.drawerItem}/>
       </GuardUser>
 
-      <div className={classes.portal}>
-        <GuardUser>
-          <RoomControlGroup />
-          <AdminControlGroup />
-          <GameScoreboardFinal />
-        </GuardUser>
-        {/*<Scrollbar>*/}
-        {/*<PortalTarget name='header'/>*/}
-        {/*</Scrollbar>*/}
-      </div>
+      <Divider/>
 
       <span className={classes.spacer}>&nbsp;</span>
 
@@ -88,8 +105,8 @@ export const AppBar = ({classes}) => (
               href={T.translate('App.Misc.FAQ_HREF')}>
         {T.translate('App.Misc.FAQ')}
       </Button>
-    </Toolbar>
+    </Drawer>
   </MUIAppBar>
-);
+  )};
 
 export default withStyles(styles)(AppBar);

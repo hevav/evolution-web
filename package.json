@@ -62,8 +62,9 @@
     "history": "^4.7.2",
     "i18n-react": "^0.6.4",
     "immutable": "^3.8.2",
+    "invariant": "latest",
     "jsonwebtoken": "^8.4.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.15",
     "moment": "^2.23.0",
     "mongodb": "^3.1.10",
     "prop-types": "^15.6.2",
@@ -93,8 +94,7 @@
     "winston": "^2.4.4",
     "winston-google-spreadsheet": "0.0.5",
     "winston-null": "^2.0.0",
-    "yaml-js": "^0.2.3",
-    "invariant": "latest"
+    "yaml-js": "^0.2.3"
   },
   "devDependencies": {
     "@babel/node": "^7.2.2",
@@ -123,7 +123,7 @@
     "ignore-styles": "^5.0.1",
     "jsdom": "^13.1.0",
     "mocha": "^5.2.0",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.13.1",
     "node-sass-json-importer": "^4.1.0",
     "nodemon": "^1.18.9",
     "react-dnd-test-backend": "^7.0.2",

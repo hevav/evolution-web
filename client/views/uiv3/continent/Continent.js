@@ -20,7 +20,6 @@ import {SVGContextSpy} from "../SVGContext";
 const styles = {
   continent: {
     ...GameStyles.gridContainerBase
-    , minWidth: (GameStyles.defaultWidth + 20) * 3
     , minHeight: (GameStyles.animal.height + 20)
     , '& .ContinentZone': {
       ...GameStyles.animalBase
