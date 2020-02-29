@@ -6,6 +6,8 @@
 
 Адрес оф. сервера: https://evo2.herokuapp.com
 
+Адрес неоф. сервера: https://evolution-hevav.herokuapp.com
+
 Список изменений: https://github.com/ivan-work/evolution-web/blob/master/changelog.md
 
 Правила: https://vk.com/doc-36567706_134818567
