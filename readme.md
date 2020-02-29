@@ -5,7 +5,8 @@
 - FAQ: [FAQ (ru)](faq-ru.md)
 
 
-##Basic Install
+## Basic Install
+
 ### Docker
 1. Install Docker
 1. Build Docker image
@@ -26,7 +27,9 @@
     - ``$ heroku container:release evo2 -a your_heroku_url`` 
 
 ### Manual Install
+
 #### Download
+
 1. Clone repo
     - ``$ git clone https://github.com/hevav/evolution-web``
 1. Install dependencies
@@ -39,11 +42,13 @@
 1. Fill .env
 
 ##### dev:
+
 ```
 $ npm start
 ```
 
 ##### prod:
+
 ```
 $ NODE_ENV=production
 $ npm run build
@@ -51,19 +56,21 @@ $ npm run server:start
 ```
 
 ##### test:
+
 ```
 $ LOG_LEVEL=warn npm run test:shared
 $ LOG_LEVEL=warn npm run test:shared:once
 ```
-##Other envs
-Name | Value | Required / Default
----- | ----- | --------
+## Other envs
+
+Name | Value | Required or Default
+--- | --- | ---
 PORT | Port for development server | Default 3000
-NODE_ENV | production/test/development | test
+NODE_ENV | production\/test\/development | test
 LOG_LEVEL | Logging level ('silly', 'debug', 'verbose', 'info', 'warn', 'error') | verbose
 JWT_SECRET | JWT Key(any string) | Yes
-MONGO_URL | MongoDB URL(mongodb://) for statistics | For statistics
-DEBUG_STATE | Any value | For /timeout and /stats
+MONGO_URL | MongoDB URL(mongodb:\/\/) for statistics | For statistics
+DEBUG_STATE | Any value | For \/timeout and \/stats
 WRITE_STATS | Write stats to MongoDB | Default true
 GOOGLE_LOG_CHAT | Write chats to Google docs | Default false
 GOOGLE_CLIENT_ID | Google API | For chat logging
