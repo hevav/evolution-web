@@ -4,11 +4,16 @@ Main server: https://evo2.herokuapp.com
 
 [FAQ (ru)](faq-ru.md)
 
+### Docker
+1. Install Docker
+1.  ``$ docker build . -t evolution-web --build-arg JWT_SECRET="YOUR_JWT_KEY"``
+1.  ``$ docker run evolution-web --env JWT_SECRET="YOUR_JWT_KEY"``
+
 ### Install
-1. clone
+1. Clone
 1. ```$ npm i```
 1. ```$ cp .env.sample .env```
-1. fill .env
+1. Fill .env
 
 ### Run
 

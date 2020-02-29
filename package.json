@@ -43,8 +43,8 @@
   "author": "null",
   "license": "MIT",
   "engines": {
-    "node": "11.6.0",
-    "npm": "6.5.0"
+    "node": "13.9.0",
+    "npm": "6.14.1"
   },
   "dependencies": {
     "@babel/core": "^7.2.2",
