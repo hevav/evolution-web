@@ -11,6 +11,7 @@ import {withStyles} from "@material-ui/core/styles";
 
 import TextLogin from "./auth/TextLogin";
 import VKAPILogin from './auth/VKAPILogin';
+import TwitterAPILogin from './auth/TwitterAPILogin';
 import Typography from "@material-ui/core/Typography";
 
 const styles = theme => ({
@@ -49,27 +50,7 @@ export const Login = ({classes, isAuthenticated}) => { //TODO i18n to FAQ
                         <Typography variant="h6">
                             {T.translate("App.Misc.FAQ")}
                         </Typography>
-                        <Typography>
-                            <br/>
-                            Игра скопирована с настольной игры "Эволюция: Происхождение Видов"
-                            http://rightgames.ru/games/evolyuciya
-                            <br/>
-                            <br/>
-                            Адрес оф. сервера: https://evo2.herokuapp.com
-                            <br/>
-                            <br/>
-                            Адрес неоф. сервера: https://evolution-hevav.herokuapp.com
-                            <br/>
-                            <br/>
-                            Список изменений: https://github.com/ivan-work/evolution-web/blob/master/changelog.md
-                            <br/>
-                            <br/>
-                            Правила: https://vk.com/doc-36567706_134818567
-                            <br/>
-                            <br/>
-                            Правила растений: https://hobbyworld.ru/download/rules/evo-plant_rus.pdf
-
-                        </Typography>
+                        <Typography dangerouslySetInnerHTML={{ __html: T.translate("App.Misc.FAQ_TEXT") }}/>
                     </Paper>
                 </Grid>
                 <Grid container
@@ -79,12 +60,16 @@ export const Login = ({classes, isAuthenticated}) => { //TODO i18n to FAQ
                     {isAuthenticated && <Redirect to={'/'}/>}
                     <Grid item xs={6}>
                         <Paper className={classes.loginOption}>
+                            <Typography variant="h4">
+                                {T.translate("App.Login.Login")}
+                            </Typography>
                             <TextLogin/>
                         </Paper>
                     </Grid>
                     <Grid item xs={6}>
                         <Paper className={classes.loginOption}>
                             <VKAPILogin/>
+                            <TwitterAPILogin/>
                         </Paper>
                     </Grid>
                 </Grid>

@@ -17,7 +17,7 @@ export const VKAPILogin = ({classes}) => {
     , display: 'page'
     , response_type: 'code'
     , v: '5.60'
-    // , revoke: process.env.NODE_ENV === 'production' ? 0 : 1
+    // , revoke: process.env.NODE_ENV === 'pproduction' ? 0 : 1
     // , state: connectionId
   };
 

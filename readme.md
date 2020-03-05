@@ -66,8 +66,8 @@ $ LOG_LEVEL=warn npm run test:shared:once
 Name | Value | Required or Default
 --- | --- | ---
 PORT | Port for development server | Default 3000
-NODE_ENV | production\/test\/development | test
-LOG_LEVEL | Logging level ('silly', 'debug', 'verbose', 'info', 'warn', 'error') | verbose
+NODE_ENV | production\/test\/development | Default test
+LOG_LEVEL | Logging level ('silly', 'debug', 'verbose', 'info', 'warn', 'error') | Default verbose
 JWT_SECRET | JWT Key(any string) | Yes
 MONGO_URL | MongoDB URL(mongodb:\/\/) for statistics | For statistics
 DEBUG_STATE | Any value | For \/timeout and \/stats

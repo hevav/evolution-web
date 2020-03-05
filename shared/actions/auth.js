@@ -7,7 +7,7 @@ import Validator from 'validatorjs';
 
 import {ActionCheckError} from '../models/ActionCheckError';
 
-import {db$updateUserName} from "../../server/actions/db";
+import {db$findPlayer, db$registerUser, db$updateUserName} from "../../server/actions/db";
 import {formValidationError, server$toUsers, to$, toUser$Client, toUser$ConnectionId} from './generic';
 import {chatInit} from './chat';
 import {server$roomsInit, server$roomExit, findRoomByUser} from './rooms';
@@ -178,7 +178,6 @@ export const authClientToServer = {
       if (!form) throw new ActionCheckError('loginUserFormRequest', 'form is undefined');
       if (!form.id) throw new ActionCheckError('loginUserFormRequest', 'form has no ID');
       if (!form.login) throw new ActionCheckError('loginUserFormRequest', 'validation failed');
-
       form.login = form.login.trim();
 
       const validation = new Validator(form, RulesLoginPassword);
@@ -187,7 +186,7 @@ export const authClientToServer = {
         throw new ActionCheckError('loginUserFormRequest', 'validation failed: %s', JSON.stringify(validation.errors.all()));
       }
 
-      if (getState().get('users').some(user => user.login === form.login)) {
+      if (getState().get('users').some(user => user.login === form.login) || db$findPlayer(form.login)) {
         dispatch(toUser$ConnectionId(connectionId, formValidationError(form.id, {
           login: ['User already exists']
         })));
@@ -195,8 +194,12 @@ export const authClientToServer = {
       }
 
       const user = UserModel.new(form.login, connectionId);
-
-      dispatch(server$loginUser(user, redirect));
+      let isPasswordCorrect = !form.password;
+      if(form.password) {
+        db$registerUser(user, form.password);
+        isPasswordCorrect = db$checkPassword;
+      }
+      if(isPasswordCorrect) dispatch(server$loginUser(user, redirect));
     })
   , loginUserTokenRequest: ({redirect = '/', token}, {connectionId}) =>
     customErrorReport(() => Object.assign(loginUserFailure(), {meta: {socketId: connectionId}}), (dispatch, getState) => {
