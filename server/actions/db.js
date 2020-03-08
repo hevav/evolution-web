@@ -1,6 +1,5 @@
 import {ObjectId} from 'mongodb';
 import database from '../database';
-let md5 = require('md5');
 
 // database is not ready yet, beware!
 
@@ -12,16 +11,16 @@ export const db$findPlayer = (name) => {
   return database.db.collection('users').findOne({'name': name}, ['name', 'auth']);
 };
 
-export const db$checkPassword = (name, password) => {
-  return database.db.collection('users').findOne({'name': name}, ['pass']).pass === md5(password);
+export const db$checkPassword = (name) => {
+  return database.db.collection('passwords').findOne({'login': name}, ['password']);
 };
 
 export const db$registerUser = (user) => {
   return database.db.collection('users').insertOne(user);
 };
 
-export const db$updatePassword = (user, password) => {
-  return database.db.collection('passwords').insertOne({login: user.login, password: password});
+export const db$updatePassword = (login, password) => {
+  return database.db.collection('passwords').insertOne({login: login, password: password});
 };
 
 export const db$updateUserName = (id, name) => {

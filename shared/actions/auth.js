@@ -7,13 +7,21 @@ import Validator from 'validatorjs';
 
 import {ActionCheckError} from '../models/ActionCheckError';
 
-import {db$findPlayer, db$registerUser, db$updateUserName} from "../../server/actions/db";
+import {
+  db$checkPassword,
+  db$findPlayer,
+  db$registerUser,
+  db$updatePassword,
+  db$updateUserName
+} from "../../server/actions/db";
 import {formValidationError, server$toUsers, to$, toUser$Client, toUser$ConnectionId} from './generic';
 import {chatInit} from './chat';
 import {server$roomsInit, server$roomExit, findRoomByUser} from './rooms';
 
 export const SOCKET_DISCONNECT_NOW = 'SOCKET_DISCONNECT_NOW';
 export const USER_LOGOUT_TIMEOUT = 120e3;
+
+let md5 = require('md5');
 
 import TimeService from '../../client/services/TimeService';
 import {redirectTo} from "../utils/history";
@@ -185,21 +193,36 @@ export const authClientToServer = {
         dispatch(toUser$ConnectionId(connectionId, formValidationError(form.id, validation.errors.all())));
         throw new ActionCheckError('loginUserFormRequest', 'validation failed: %s', JSON.stringify(validation.errors.all()));
       }
-
-      if (getState().get('users').some(user => user.login === form.login) || db$findPlayer(form.login)) {
-        dispatch(toUser$ConnectionId(connectionId, formValidationError(form.id, {
-          login: ['User already exists']
-        })));
-        throw new ActionCheckError('loginUserFormRequest', 'User already exists');
-      }
+      db$findPlayer(form.login).then(users => {
+        if (getState().get('users').some(user => user.login === form.login) || users) {
+          dispatch(toUser$ConnectionId(connectionId, formValidationError(form.id, {
+            login: ['User already exists']
+          })));
+          console.log(users);
+          throw new ActionCheckError('loginUserFormRequest', 'User already exists');
+        }
+      });
 
       const user = UserModel.new(form.login, connectionId);
-      let isPasswordCorrect = !form.password;
       if(form.password) {
-        db$registerUser(user, form.password);
-        isPasswordCorrect = db$checkPassword;
+        db$findPlayer(form.login)
+        .then((isRegistered)=> {
+              if(!isRegistered)
+                db$registerUser(user.toObject()).then(()=>
+                    db$updatePassword(form.login, md5(form.password)).then(()=>
+                        dispatch(server$loginUser(user, redirect))
+                    )
+                )
+              else
+                db$checkPassword(form.login)
+                  .then((response) => {
+                    if (response.password === md5(form.password))
+                      dispatch(server$loginUser(user, redirect))
+                  })
+            }
+        );
       }
-      if(isPasswordCorrect) dispatch(server$loginUser(user, redirect));
+      else dispatch(server$loginUser(user, redirect));
     })
   , loginUserTokenRequest: ({redirect = '/', token}, {connectionId}) =>
     customErrorReport(() => Object.assign(loginUserFailure(), {meta: {socketId: connectionId}}), (dispatch, getState) => {
