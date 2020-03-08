@@ -81,3 +81,7 @@ VK_API_ID | VK API | For VK OAuth
 VK_API_SECRET | VK API | For VK OAuth
 TWITTER_KEY | Twitter API | For Twitter OAuth(soon)
 TWITTER_SECRET | Twitter API | For Twitter OAuth(soon)
+
+## TODO
+
+- Users' profiles with game statistics

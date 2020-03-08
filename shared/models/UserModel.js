@@ -27,10 +27,10 @@ export class UserModel extends Record({
         .set('chat', ChatModel.fromJS(js.chat));
   }
 
-  static new(login, connectionId) {
+  static new(login, connectionId, authType) {
     return new UserModel({
       id: uuid.v4()
-      , login, connectionId
+      , login, connectionId, authType
     }).sign()
   }
 

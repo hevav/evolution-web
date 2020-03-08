@@ -7,10 +7,6 @@ export const db$findUser = (authType, authId) => {
   return database.db.collection('users').findOne({'auth.type': authType, 'auth.id': authId}, ['name', 'auth']);
 };
 
-export const db$findPlayer = (name) => {
-  return database.db.collection('users').findOne({'name': name}, ['name', 'auth']);
-};
-
 export const db$checkPassword = (name) => {
   return database.db.collection('passwords').findOne({'login': name}, ['password']);
 };
