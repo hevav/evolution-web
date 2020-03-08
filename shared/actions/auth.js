@@ -7,7 +7,13 @@ import Validator from 'validatorjs';
 
 import {ActionCheckError} from '../models/ActionCheckError';
 
-import {db$updateUserName} from "../../server/actions/db";
+import {
+  db$checkPassword,
+  db$findUser,
+  db$registerUser,
+  db$updatePassword,
+  db$updateUserName
+} from "../../server/actions/db";
 import {formValidationError, server$toUsers, to$, toUser$Client, toUser$ConnectionId} from './generic';
 import {chatInit} from './chat';
 import {server$roomsInit, server$roomExit, findRoomByUser} from './rooms';
@@ -15,8 +21,11 @@ import {server$roomsInit, server$roomExit, findRoomByUser} from './rooms';
 export const SOCKET_DISCONNECT_NOW = 'SOCKET_DISCONNECT_NOW';
 export const USER_LOGOUT_TIMEOUT = 120e3;
 
+let md5 = require('md5');
+
 import TimeService from '../../client/services/TimeService';
 import {redirectTo} from "../utils/history";
+import {AUTH_TYPE} from "../constants";
 
 export const socketConnect = (connectionId, sendToClient, ip) => ({
   type: 'socketConnect'
@@ -178,7 +187,6 @@ export const authClientToServer = {
       if (!form) throw new ActionCheckError('loginUserFormRequest', 'form is undefined');
       if (!form.id) throw new ActionCheckError('loginUserFormRequest', 'form has no ID');
       if (!form.login) throw new ActionCheckError('loginUserFormRequest', 'validation failed');
-
       form.login = form.login.trim();
 
       const validation = new Validator(form, RulesLoginPassword);
@@ -186,17 +194,45 @@ export const authClientToServer = {
         dispatch(toUser$ConnectionId(connectionId, formValidationError(form.id, validation.errors.all())));
         throw new ActionCheckError('loginUserFormRequest', 'validation failed: %s', JSON.stringify(validation.errors.all()));
       }
+      db$findUser(AUTH_TYPE.Form, form.login).then(users => {
+        if (getState().get('users').some(user => user.login === form.login) || (users && form.password === "")) {
+          dispatch(toUser$ConnectionId(connectionId, formValidationError(form.id, {
+            login: ['User already exists']
+          })));
+          console.log(users);
+          throw new ActionCheckError('loginUserFormRequest', 'User already exists');
+        }
 
-      if (getState().get('users').some(user => user.login === form.login)) {
-        dispatch(toUser$ConnectionId(connectionId, formValidationError(form.id, {
-          login: ['User already exists']
-        })));
-        throw new ActionCheckError('loginUserFormRequest', 'User already exists');
-      }
-
-      const user = UserModel.new(form.login, connectionId);
-
-      dispatch(server$loginUser(user, redirect));
+        if(form.password !== "") {
+          const user = UserModel.new(form.login, connectionId, AUTH_TYPE.Form);
+          db$findUser(AUTH_TYPE.Form, form.login)
+              .then((isRegistered)=> {
+                    if(!isRegistered){
+                      let userObject = user.toObject();
+                      db$registerUser({
+                        name: userObject.login,
+                        auth: {
+                          type: AUTH_TYPE.Form,
+                          name: userObject.login,
+                          id: userObject.login
+                        }
+                      }).then(()=>
+                          db$updatePassword(form.login, md5(form.password)).then(()=>
+                              dispatch(server$loginUser(user, redirect))
+                          )
+                      );
+                    }
+                    else
+                      db$checkPassword(form.login)
+                          .then((response) => {
+                            if (response.password === md5(form.password))
+                              dispatch(server$loginUser(user, redirect))
+                          });
+                  }
+              );
+        }
+        else dispatch(server$loginUser(UserModel.new(form.login, connectionId, null), redirect));
+      });
     })
   , loginUserTokenRequest: ({redirect = '/', token}, {connectionId}) =>
     customErrorReport(() => Object.assign(loginUserFailure(), {meta: {socketId: connectionId}}), (dispatch, getState) => {

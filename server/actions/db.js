@@ -7,8 +7,16 @@ export const db$findUser = (authType, authId) => {
   return database.db.collection('users').findOne({'auth.type': authType, 'auth.id': authId}, ['name', 'auth']);
 };
 
+export const db$checkPassword = (name) => {
+  return database.db.collection('passwords').findOne({'login': name}, ['password']);
+};
+
 export const db$registerUser = (user) => {
   return database.db.collection('users').insertOne(user);
+};
+
+export const db$updatePassword = (login, password) => {
+  return database.db.collection('passwords').insertOne({login: login, password: password});
 };
 
 export const db$updateUserName = (id, name) => {

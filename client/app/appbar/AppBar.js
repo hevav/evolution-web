@@ -24,6 +24,7 @@ import GuardUser from "../../components/GuardUser";
 import IconButton from "@material-ui/core/IconButton";
 import Drawer from "@material-ui/core/Drawer";
 import Divider from "@material-ui/core/Divider";
+import Profile from "../../components/profile/Profile";
 
 const styles = theme => ({
   title: {
@@ -82,6 +83,7 @@ export const AppBar = function ({classes}) {
         <SettingVolumeMenuItem className={classes.drawerItem}/>
         <SettingUIv3MenuItem className={classes.drawerItem}/>
         <LinkProfile className={classes.drawerItem}/>
+        <Profile />
         <RoomControlGroup className={classes.drawerItem}/>
         <GameScoreboardFinal className={classes.drawerItem}/>
         <AdminControlGroup className={classes.drawerItem}/>

@@ -2,6 +2,7 @@ App:
   TBD: In development
   Login:
     Login: Login
+    Guest: Guest
     Username: Username
     Password: Password
     VK: Sign in with VK
@@ -15,6 +16,13 @@ App:
     Disagree: No # Yes: Да => true: Да WTF???
     FAQ: FAQ
     FAQ_HREF: 'https://github.com/ivan-work/evolution-web/blob/master/faq-ru.md'
+    FAQ_TEXT: >-
+              <br/>Game copied from <a href="http://rightgames.ru/games/evolyuciya">"Эволюция: Происхождение Видов"</a>
+              <br/><br/>Official server: <a href="https://evo2.herokuapp.com">https://evo2.herokuapp.com</a>
+              <br/><br/>Unofficial server: <a href="https://evolution-hevav.herokuapp.com">https://evolution-hevav.herokuapp.com</a>
+              <br/><br/>Changelog: <a href="https://github.com/ivan-work/evolution-web/blob/master/changelog.md">https://github.com/ivan-work/evolution-web/blob/master/changelog.md</a>
+              <br/><br/>Rules: <a href="https://vk.com/doc-36567706_134818567">https://vk.com/doc-36567706_134818567</a>
+              <br/><br/>Plants rules: <a href="https://hobbyworld.ru/download/rules/evo-plant_rus.pdf">https://hobbyworld.ru/download/rules/evo-plant_rus.pdf</a>
   Chat:
     Label: Chat
     EnterMessage: ...

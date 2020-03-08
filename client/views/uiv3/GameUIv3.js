@@ -31,6 +31,7 @@ import GameStyles from "./GameStyles";
 import FoodWrapper from "./food/FoodWrapper";
 import PlantsContainer from "./plants/PlantsContainer";
 import Typography from "@material-ui/core/Typography/Typography";
+import {List} from "immutable";
 
 const styles = theme => ({
   GameUIv3Container: {
@@ -154,10 +155,10 @@ export const GameUIv3 = ({classes, game, compress, toggleCompress}) => {
 
         <Grid item className={cn(classes.gridMiscRow, {'Compressed': compress})}>
           <Paper className={cn(classes.gridMiscItem, 'Toolbar', {'Compressed': compress})}>
-            <GameInfoToolbar game={game} compressControls={{compress, toggleCompress}} />
+            <GameInfoToolbar game={game} compressControls={{compress, toggleCompress}}/>
           </Paper>
           {!compress && <Paper className={cn(classes.gridMiscItem, 'PlayersList', {'Compressed': compress})}>
-            <PlayersList game={game} />
+            <PlayersList game={game}/>
           </Paper>}
           <div className={classes.gridMiscSubRow}>
             {!game.isPlantarium() && <Paper className={cn(classes.gridMiscItem, 'Food', {'Compressed': compress})}>
