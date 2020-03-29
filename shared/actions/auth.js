@@ -194,12 +194,43 @@ export const authClientToServer = {
         dispatch(toUser$ConnectionId(connectionId, formValidationError(form.id, validation.errors.all())));
         throw new ActionCheckError('loginUserFormRequest', 'validation failed: %s', JSON.stringify(validation.errors.all()));
       }
+
+      let verifiedFormLogin = replaceCyr(form.login);
+
+      function replaceCyr(textToReplace) {
+        let cyr = textToReplace;
+        let replaceGrid = {
+          "a": "а",
+          "A": "А",
+          "B": "В",
+          "c": "с",
+          "C": "С",
+          "e": "е",
+          "E": "Е",
+          "k": "к",
+          "K": "К",
+          "m": "м",
+          "M": "М",
+          "H": "Н",
+          "o": "о",
+          "O": "О",
+          "0": "О",
+          "p": "р",
+          "P": "Р",
+          "t": "т",
+          "T": "Т",
+          "y": "у",
+          "Y": "У"
+        }
+        Object.keys(replaceGrid).map((val) => cyr = cyr.replace(val, replaceGrid[val]));
+        return cyr;
+      }
+
       db$findUser(AUTH_TYPE.Form, form.login).then(users => {
-        if (getState().get('users').some(user => user.login === form.login) || (users && form.password === "")) {
+        if (getState().get('users').some(user => replaceCyr(user.login) === verifiedFormLogin) || (users && form.password === "")) {
           dispatch(toUser$ConnectionId(connectionId, formValidationError(form.id, {
             login: ['User already exists']
           })));
-          console.log(users);
           throw new ActionCheckError('loginUserFormRequest', 'User already exists');
         }
 
