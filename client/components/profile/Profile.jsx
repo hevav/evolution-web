@@ -9,7 +9,9 @@ import Button from "@material-ui/core/Button";
 import {server$logoutUser} from "../../../shared/actions/auth";
 
 export const LinkBody = ({userId}) =>
-      <MenuItem onClick={()=>{sessionStorage.clear(); window.location.reload()}}>
+      <MenuItem onClick={()=>{(process.env.NODE_ENV === 'production'
+          ? localStorage
+          : sessionStorage).removeItem('user'); window.location.reload()}}>
           {T.translate("App.Room.$Exit")}
       </MenuItem>
 
