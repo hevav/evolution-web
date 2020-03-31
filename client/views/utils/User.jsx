@@ -27,7 +27,10 @@ export const UserVariants = {
     { (user.authType === "Form") ? <AccountBoxIcon style={{verticalAlign: 'middle', fontSize: "18px", height: "14px", margin: "2px"}}/> : (user.authType === "VK")? <img src={VKIcon} style={{verticalAlign: 'middle', height: "14px", margin: "2px"}}/> : ""}{user.login}
       </span>
   , typography: ({user, className}) => (
-    <Typography className={'User' + (className ? ' ' + className : '')} inline color='inherit' component='span'>
+    <Typography display='inline'
+                className={'User' + (className ? ' ' + className : '')}
+                color='inherit'
+                component='span'>
       {user.login}
     </Typography>
   )
