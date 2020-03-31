@@ -7,8 +7,8 @@ import VKIcon from "../../assets/gfx/vk.svg";
 
 const styles = theme => ({
   root: {
-    padding: theme.spacing.unit,
-    margin: theme.spacing.unit/2
+    padding: theme.spacing(),
+    margin: theme.spacing()/2
   }
 });
 

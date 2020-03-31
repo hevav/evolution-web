@@ -48,7 +48,7 @@ const styles = theme => ({
   , spacer: {flexGrow: 1}
   , button: {
     whiteSpace: 'nowrap'
-    , margin: theme.spacing.unit
+    , margin: theme.spacing()
     , flex: theme.style.flex.off
   }
 });

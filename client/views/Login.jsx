@@ -7,7 +7,7 @@ import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import {withStyles} from "@material-ui/core/styles";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 import TextLogin from "./auth/TextLogin";
 import VKAPILogin from './auth/VKAPILogin';
@@ -15,9 +15,9 @@ import TwitterAPILogin from './auth/TwitterAPILogin';
 import Typography from "@material-ui/core/Typography";
 
 const styles = theme => ({
-    loginOption: {
-        padding: theme.spacing.unit * 3
-        , margin: theme.spacing.unit
+  loginOption: {
+    padding: theme.spacing(3)
+    , margin: theme.spacing()
         , flexGrow: 1
         , height: 'calc(100% - ' + theme.spacing.unit * 2 + 'px)'
         , width: 'calc(100% - ' + theme.spacing.unit * 2 + 'px)'

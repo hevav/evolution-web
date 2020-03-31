@@ -7,7 +7,7 @@ import {compose} from "recompose";
 import Chat from '../Chat.jsx';
 import UsersList from '../utils/UsersList.jsx';
 
-import RoomSettings from './RoomSettings.jsx';
+import RoomSettings from './settings/RoomSettings.jsx';
 import RoomStartVotingDialog, {RoomStartVotingTimer} from './RoomStartVotingDialog.jsx';
 
 import {
@@ -30,7 +30,7 @@ import {UserVariants} from "../utils/User";
 
 const styles = theme => ({
   root: {
-    padding: theme.spacing.unit
+    padding: theme.spacing()
     , flex: '1 1 0'
   }
   , container: {
@@ -39,8 +39,9 @@ const styles = theme => ({
   , column: {
   }
   , columnPaper: {
-    padding: theme.spacing.unit
+    padding: theme.spacing()
     , width: '100%'
+    , flex: '1'
   }
   , columnSettings: {
     flex: '1 1 0'
