@@ -11,14 +11,21 @@ import T from "i18n-react";
 import IconButton from "@material-ui/core/IconButton";
 import IconKickUser from '@material-ui/icons/Clear';
 import IconBanUser from '@material-ui/icons/Block';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import VKIcon from '../../assets/gfx/vk.svg';
+
 import Typography from "@material-ui/core/Typography";
+import {SvgIcon} from "@material-ui/core";
 
 const defaultUser = (id) => ({
   id, login: '---'
 });
 
 export const UserVariants = {
-  simple: ({user}) => <span className='User'>{user.login}</span>
+  simple: ({user}) =>
+      <span className='User'>
+    { (user.authType === "Form") ? <AccountBoxIcon style={{verticalAlign: 'middle', fontSize: "18px", height: "14px", margin: "2px"}}/> : (user.authType === "VK")? <img src={VKIcon} style={{verticalAlign: 'middle', height: "14px", margin: "2px"}}/> : ""}{user.login}
+      </span>
   , typography: ({user, className}) => (
     <Typography className={'User' + (className ? ' ' + className : '')} inline color='inherit' component='span'>
       {user.login}

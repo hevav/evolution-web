@@ -93,6 +93,7 @@ export const server$loginUser = (user, redirect) => (dispatch, getState) => {
   loggerOnline.info(`User ${user.login} joined`);
   const online = getState().get('users').map(u => u.toOthers());
   const rooms = getState().get('rooms');
+  //getState().get('users').forEach(logged_user => (logged_user.id === user.id) && dispatch(server$logoutUser(user.id)));
   dispatch(loginUser({user}));
   dispatch(server$roomsInit(user.id));
   dispatch(toUser$Client(user.id, loginUser({user: user.toClient(), redirect, online})));
@@ -126,6 +127,7 @@ export const server$logoutUser = (userId) => (dispatch, getState) => {
 export const server$injectUser = (id, login, authType) => (dispatch) => {
   // console.log('dbUser', id, login)
   const user = new UserModel({id, login, authType}).sign();
+  //getState().get('users').forEach(logged_user => (logged_user.id === user.id) && dispatch(server$logoutUser(user.id)));
   dispatch(loginUser({user}));
   dispatch(addTimeout(
     USER_LOGOUT_TIMEOUT
@@ -225,9 +227,8 @@ export const authClientToServer = {
         Object.keys(replaceGrid).map((val) => cyr = cyr.replace(val, replaceGrid[val]));
         return cyr;
       }
-
       db$findUser(AUTH_TYPE.Form, form.login).then(users => {
-        if (getState().get('users').some(user => replaceCyr(user.login) === verifiedFormLogin) || (users && form.password === "")) {
+        if (form.password === "" && (users || getState().get('users').some(user => replaceCyr(user.login) === verifiedFormLogin))) {
           dispatch(toUser$ConnectionId(connectionId, formValidationError(form.id, {
             login: ['User already exists']
           })));
@@ -235,32 +236,33 @@ export const authClientToServer = {
         }
 
         if(form.password !== "") {
-          const user = UserModel.new(form.login, connectionId, AUTH_TYPE.Form);
-          db$findUser(AUTH_TYPE.Form, form.login)
-              .then((isRegistered)=> {
-                    if(!isRegistered){
-                      let userObject = user.toObject();
-                      db$registerUser({
-                        name: userObject.login,
-                        auth: {
-                          type: AUTH_TYPE.Form,
-                          name: userObject.login,
-                          id: userObject.login
-                        }
-                      }).then(()=>
-                          db$updatePassword(form.login, md5(form.password)).then(()=>
-                              dispatch(server$loginUser(user, redirect))
-                          )
-                      );
-                    }
-                    else
-                      db$checkPassword(form.login)
-                          .then((response) => {
-                            if (response.password === md5(form.password))
-                              dispatch(server$loginUser(user, redirect))
-                          });
-                  }
+            if(!users){
+              db$registerUser({
+                name: form.login,
+                auth: {
+                  type: AUTH_TYPE.Form,
+                  name: form.login,
+                  id: form.login
+                }
+              }).then(()=>
+                  db$updatePassword(form.login, md5(form.password)).then(()=>
+                      dispatch(server$injectUser(users._id.toString(), users.name, AUTH_TYPE.Form))
+                  )
               );
+            }
+            else
+              db$checkPassword(form.login)
+                  .then((response) => {
+                    if (response.password === md5(form.password)) {
+                      dispatch(server$injectUser(users._id.toString(), users.name, AUTH_TYPE.Form));
+                    }
+                    else{
+                        dispatch(toUser$ConnectionId(connectionId, formValidationError(form.id, {
+                            login: ['Wrong password']
+                        })));
+                        throw new ActionCheckError('loginUserFormRequest', 'Wrong password');
+                    }
+                  });
         }
         else dispatch(server$loginUser(UserModel.new(form.login, connectionId, null), redirect));
       });

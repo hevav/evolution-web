@@ -3,18 +3,19 @@ import React, {Component} from 'react';
 import T from 'i18n-react';
 import Button from '@material-ui/core/Button';
 import {withStyles} from "@material-ui/core/styles";
+import TwitterIcon from '@material-ui/icons/Twitter';
+import AccountBoxIcon from "@material-ui/icons/AccountBox";
 
 const styles = theme => ({
   root: {
-    padding: theme.spacing.unit
+    padding: theme.spacing.unit,
+    margin: theme.spacing.unit/2
   }
 });
 
 export const TwitterAPILogin = ({classes}) => {
   return (
-    <div id="TwitterAPIAuth" className={classes.root}>
-      <Button color="primary" variant="contained" disabled>{T.translate('App.Login.Twitter')}</Button>
-    </div>
+    <Button className={classes.root} color="primary" variant="contained" disabled><TwitterIcon style={{verticalAlign: 'middle', fontSize: "18px", height: "14px"}}/></Button>
   );
 };
 

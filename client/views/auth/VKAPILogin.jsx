@@ -3,10 +3,12 @@ import React, {Component} from 'react';
 import T from 'i18n-react';
 import Button from '@material-ui/core/Button';
 import {withStyles} from "@material-ui/core/styles";
+import VKIcon from "../../assets/gfx/vk.svg";
 
 const styles = theme => ({
   root: {
-    padding: theme.spacing.unit
+    padding: theme.spacing.unit,
+    margin: theme.spacing.unit/2
   }
 });
 
@@ -24,9 +26,7 @@ export const VKAPILogin = ({classes}) => {
   const VK_API_REQUEST_STRING = 'https://oauth.vk.com/authorize?' + Object.keys(VK_API_REQUEST).map((k) => k + '=' + VK_API_REQUEST[k]).join('&');
 
   return (
-    <div id="VKAPIAuth" className={classes.root}>
-      <Button color="primary" variant="contained" href={VK_API_REQUEST_STRING}>{T.translate('App.Login.VK')}</Button>
-    </div>
+    <Button className={classes.root} color="primary" variant="contained" href={VK_API_REQUEST_STRING}><img src={VKIcon} style={{verticalAlign: 'middle', height: "0.875rem", filter: "invert(100%)"}}/></Button>
   );
 };
 

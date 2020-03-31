@@ -11,6 +11,9 @@ import withForm from "../../components/withForm";
 import {RulesLoginPassword} from "../../../shared/models/UserModel";
 
 import {loginUserFormRequest} from "../../../shared/actions/auth";
+import VKAPILogin from "./VKAPILogin";
+import TwitterAPILogin from "./TwitterAPILogin";
+import Paper from "@material-ui/core/Paper";
 
 function buttonChanging(isGuest) {
     if(isGuest)
@@ -42,6 +45,7 @@ export const TextLogin = compose(
                     value={form.login}
                     onChange={formOnChange}
                     error={errors.login}
+                    style={{width: "100%"}}
                 />
             </div>
             <div>
@@ -52,18 +56,20 @@ export const TextLogin = compose(
                     value={form.password}
                     onChange={(e)=> {formOnChange(e); buttonChanging(e.target.value.length === 0)}}
                     error={errors.password}
+                    style={{width: "100%"}}
                 />
             </div>
-            <div>
-                <Button
-                    id='Submit'
-                    type='submit'
-                    variant="contained"
-                    color="primary"
-                    onClick={formOnSubmit}
-                >{T.translate('App.Login.Guest')}
-                </Button>
-            </div>
+            <Button
+                id='Submit'
+                type='submit'
+                variant="contained"
+                color="primary"
+                style={{margin: "4px"}}
+                onClick={formOnSubmit}
+            >{T.translate('App.Login.Guest')}
+            </Button>
+            <VKAPILogin/>
+            <TwitterAPILogin/>
         </form>));
 
 export default TextLogin;
