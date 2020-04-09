@@ -10,7 +10,7 @@
 ### Docker
 1. Install Docker
 1. Build Docker image
-    - ``$ docker build . -t evolution-web --build-arg JWT_SECRET="YOUR_JWT_KEY"``
+    - ``$ docker build . -t evolution-web --build-arg JWT_SECRET="YOUR_JWT_KEY"  --build-arg VK_API_ID="YOUR_VK_APP_ID" --build-arg VK_API_SECRET="YOUR_VK_API_SECRET"``
 1. Run Docker image
     - ``$ docker run evolution-web --env JWT_SECRET="YOUR_JWT_KEY"``
     
@@ -20,7 +20,7 @@
     - ``$ heroku login``
     - ``$ docker login --username=_ --password=$(heroku auth:token) registry.heroku.com``
 1. Build Docker image
-    - ``$ docker build . -t evolution-web --build-arg JWT_SECRET="YOUR_JWT_KEY" --build-arg VK_API_ID="YOUR_VK_APP_ID"``
+    - ``$ docker build . -t evolution-web --build-arg JWT_SECRET="YOUR_JWT_KEY" --build-arg VK_API_ID="YOUR_VK_APP_ID" --build-arg VK_API_SECRET="YOUR_VK_API_SECRET"``
 1. Push evo2 to Heroku
     - ``$ docker push registry.heroku.com/your_heroku_url/evo2``
 1. Run evo2

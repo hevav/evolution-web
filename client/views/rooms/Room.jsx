@@ -79,7 +79,7 @@ export class Room extends React.PureComponent {
           {/*{T.translate('App.Room.Room')}&nbsp;«{room.name}»&nbsp;*/}
           <RoomStartVotingTimer room={room} />
         </Typography>
-        <Grid container className={classes.container} spacing={8}>
+        <Grid container className={classes.container} spacing={1}>
           <Grid container item className={classes.column} md={4} xs={12}>
             <Paper className={classes.columnPaper + ' ' + classes.columnSettings}>
               <RoomSettings roomId={room.id} />

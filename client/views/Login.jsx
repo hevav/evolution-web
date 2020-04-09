@@ -58,12 +58,19 @@ export const Login = ({classes, isAuthenticated}) => { //TODO i18n to FAQ
                       alignItems="stretch"
                 >
                     {isAuthenticated && <Redirect to={'/'}/>}
-                    <Grid item xs={12}>
+                    <Grid item xs={12} md={4}>
                         <Paper className={classes.loginOption}>
                             <Typography variant="h4">
                                 {T.translate("App.Login.Login")}
                             </Typography>
                             <TextLogin/>
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12} md={8}>
+                        <Paper className={classes.loginOption}>
+                            <Typography variant="h4">
+                                {T.translate("App.Top.Top")}
+                            </Typography>
                         </Paper>
                     </Grid>
                 </Grid>

@@ -29,7 +29,7 @@ App:
     FAQ_TEXT: >-
                <br/>Игра скопирована с настольной игры <a href="http://rightgames.ru/games/evolyuciya">"Эволюция: Происхождение Видов"</a>
                <br/><br/>Адрес оф. сервера: <a href="https://evo2.herokuapp.com">https://evo2.herokuapp.com</a>
-               <br/><br/>Адрес неоф. сервера: <a href="https://evolution-hevav.herokuapp.com">https://evolution-hevav.herokuapp.com</a>
+               <br/><br/>Адрес неоф. сервера: <a href="https://evo.eh1.ru">https://evo.eh1.ru</a>
                <br/><br/>Список изменений: <a href="https://github.com/ivan-work/evolution-web/blob/master/changelog.md">https://github.com/ivan-work/evolution-web/blob/master/changelog.md</a>
                <br/><br/>Правила: <a href="https://vk.com/doc-36567706_134818567">https://vk.com/doc-36567706_134818567</a>
                <br/><br/>Правила растений: <a href="https://hobbyworld.ru/download/rules/evo-plant_rus.pdf">https://hobbyworld.ru/download/rules/evo-plant_rus.pdf</a>
@@ -81,6 +81,8 @@ App:
       AfkHostRequest: Привет, хост! Пожалуйста, напиши что-нибудь в чат.
       AfkHostKick: Хост кикнут за АФК.
       AfkHostNormal: Хост не АФК.
+  Top:
+    Top: Топ
 Game:
   Game: Игра
   Phase:

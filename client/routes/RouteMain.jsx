@@ -35,6 +35,9 @@ const styles = theme => ({
   , roomsListWrapper: {
     flex: '1 1 0'
     , overflowY: 'auto'
+  },
+  root: {
+    flex: '1'
   }
 });
 
@@ -73,14 +76,14 @@ export const RouteMain = ({classes}) => (
         <OnlineWidget />
       </EvoPaper>
     </Grid>
-    <Grid className={classes.root} direction={(window.innerWidth < 1000)?"column":"row"} container spacing={8}>
+    <Grid className={classes.root} direction={(window.innerWidth < 1000)?"column":"row"} container spacing={1}>
       <Grid xs container item>
         <Paper className={classes.columnPaper}>
           <Typography
             className={classes.columnTitle}
             variant="h4">
-          </Typography>
             {T.translate('App.Rooms.Rooms')}: <CreateRoom />
+          </Typography>
           <div className={classes.roomsListWrapper}>
             <RoomsList />
           </div>

@@ -25,6 +25,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Drawer from "@material-ui/core/Drawer";
 import Divider from "@material-ui/core/Divider";
 import Profile from "../../components/profile/Profile";
+import List from "@material-ui/core/List";
 
 const styles = theme => ({
   title: {
@@ -78,17 +79,18 @@ export const AppBar = function ({classes}) {
         </EvoLink>
         <Typography variant="caption" color="inherit">v{GLOBAL_VERSION}</Typography>
       </div>
-      <Divider/>
-      <GuardUser>
-        <SettingVolumeMenuItem className={classes.drawerItem}/>
-        <SettingUIv3MenuItem className={classes.drawerItem}/>
-        <LinkProfile className={classes.drawerItem}/>
-        <Profile />
-        <RoomControlGroup className={classes.drawerItem}/>
-        <GameScoreboardFinal className={classes.drawerItem}/>
-        <AdminControlGroup className={classes.drawerItem}/>
-      </GuardUser>
-
+      <List>
+        <Divider/>
+        <GuardUser>
+          <SettingVolumeMenuItem className={classes.drawerItem}/>
+          <SettingUIv3MenuItem className={classes.drawerItem}/>
+          <LinkProfile className={classes.drawerItem}/>
+          <Profile />
+          <RoomControlGroup className={classes.drawerItem}/>
+          <GameScoreboardFinal className={classes.drawerItem}/>
+          <AdminControlGroup className={classes.drawerItem}/>
+        </GuardUser>
+      </List>
       <Divider/>
 
       <span className={classes.spacer}>&nbsp;</span>

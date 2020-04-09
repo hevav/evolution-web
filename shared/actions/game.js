@@ -18,7 +18,7 @@ import {
   , ANIMAL_DEATH_REASON
 } from '../models/game/evolution/constants';
 
-import {db$gameEnd} from '../../server/actions/db';
+import {db$gameEnd, db$findStats} from '../../server/actions/db';
 
 import {server$game, to$, toUser$Client} from './generic';
 import {doesPlayerHasOptions, doesOptionExist, getOptions} from './ai';
