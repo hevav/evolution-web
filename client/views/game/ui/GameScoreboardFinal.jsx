@@ -13,7 +13,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 
 import {PHASE} from '../../../../shared/models/game/GameModel';
 
-import User from "../../utils/User";
+import User from "../../players/User";
 import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
@@ -21,6 +21,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {branch, compose, renderNothing} from "recompose";
+import {Score as ScoreIcon} from "@material-ui/icons";
 import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -68,7 +69,8 @@ export class GameScoreboardFinal extends React.PureComponent {
       <Divider/>
       <MenuItem className="ShowScoreboardFinal"
                  onClick={() => this.setState({show: true})}>
-        {T.translate('Game.UI.Scores.Label')}
+        <ScoreIcon/>
+        {this.props.showText && T.translate('Game.UI.Scores.Label')}
       </MenuItem>
       <Dialog open={this.state.show}>
         {this.state.show && <DialogTitle>

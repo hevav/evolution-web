@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {compose} from "recompose";
 
 import Chat from '../Chat.jsx';
-import UsersList from '../utils/UsersList.jsx';
+import UsersList from '../players/UsersList.jsx';
 
 import RoomSettings from './settings/RoomSettings.jsx';
 import RoomStartVotingDialog, {RoomStartVotingTimer} from './RoomStartVotingDialog.jsx';
@@ -26,7 +26,7 @@ import IconUnbanUser from '@material-ui/icons/RemoveCircleOutline';
 import Tooltip from "@material-ui/core/Tooltip/Tooltip";
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import {UserVariants} from "../utils/User";
+import {UserVariants} from "../players/User";
 
 const styles = theme => ({
   root: {

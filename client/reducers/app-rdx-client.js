@@ -34,7 +34,6 @@ const saveValue = (key, value) => {
 const getInitialState = () => Map({
   lang: loadValue('lang', langCodes.hasOwnProperty(window.navigator.language) ? window.navigator.language : 'ru-ru')
   , sound: loadValue('sound', true)
-  , uiv3: loadValue('uiv3', true)
   , adminMode: process.env.NODE_ENV !== 'production'
   , plantsMode: process.env.NODE_ENV !== 'production'
   , ignoreList: OrderedSet(loadValue('ignoreList', []))
@@ -47,7 +46,6 @@ export const reducer = createReducer(getInitialState(), {
   , setAdminMode: (state, data) => state.set('adminMode', !state.get('adminMode'))
   , setPlantsMode: (state, data) => state.set('plantsMode', !state.get('plantsMode'))
   , socketConnectClient: (state, {connectionId}) => state.set('connectionId', connectionId)
-  , appUseUIv3: (state, data) => state.set('uiv3', saveValue('uiv3', data))
   , appIgnoreUser: (state, {userId}) => {
     const ignoreList = state.get('ignoreList').takeLast(99).add(userId);
     saveValue('ignoreList', ignoreList.toJS());

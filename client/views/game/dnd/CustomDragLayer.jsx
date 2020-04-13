@@ -1,10 +1,10 @@
 import React from 'react';
 import {DragLayer} from 'react-dnd';
 import {DND_ITEM_TYPE} from './DND_ITEM_TYPE';
-import DragCardPreview from '../cards/DragCardPreview.jsx';
-import {AnimalTraitArrow} from '../animals/AnimalTraitArrow.jsx';
-import {Food} from '../food/Food.jsx';
-import AnimalTraitIcon from '../animals/AnimalTraitIcon.jsx';
+import DragCardPreview from '../../game/cards/DragCardPreview.jsx';
+import {AnimalTraitArrow} from '../../game/animals/AnimalTraitArrow.jsx';
+import {Food} from '../../game/food/Food.jsx';
+import AnimalTraitIcon from '../../game/animals/AnimalTraitIcon.jsx';
 import {ArrowPreview} from './ArrowPreview.jsx';
 
 const layerStyles = {

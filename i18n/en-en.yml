@@ -1,5 +1,6 @@
 App:
   TBD: In development
+  Tournaments: Tournaments
   Login:
     Login: Login
     Guest: Guest
@@ -29,6 +30,7 @@ App:
   Rooms:
     Greeting: Hello
     Rooms: Rooms
+    News: News
     $Create: Create
     $Watch: watch
   Room:

@@ -45,11 +45,7 @@ export default (subscriptions = {}) => {
           if (animations.size > 0) {
             queue.push(action);
           } else {
-            let animationArray = subscriptions[action.type];
-            if (!getState().getIn(['app', 'uiv3'])) {
-              // I'm sorry, little one
-              animationArray = kostilAnimations[action.type];
-            }
+            let animationArray = kostilAnimations[action.type];
 
             if (animationArray) {
               const id = ID++;

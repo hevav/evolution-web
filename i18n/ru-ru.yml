@@ -1,5 +1,6 @@
 App:
   TBD: В разработке
+  Tournaments: Турниры
   Login:
     Login: Вход
     Guest: Гость
@@ -11,7 +12,6 @@ App:
   Online: Онлайн
   Settings:
     Sound: Звук
-    UIv3: Новый интерфейс (v3)
     Profile: Профиль
   Profile:
     Title: Профиль
@@ -39,6 +39,7 @@ App:
   Rooms:
     Greeting: Привет
     Rooms: Комнаты
+    News: Новости
     $Create: Создать
     $Watch: смотреть
   Room:

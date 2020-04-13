@@ -19,6 +19,9 @@ export class UserModel extends Record({
   , token: null
   , authType: null
   , chat: ChatModel.new()
+  , rep: null
+  , irlName: null
+  , regDate: null
 }) {
   static fromJS(js) {
     return js == null
@@ -29,8 +32,10 @@ export class UserModel extends Record({
 
   static new(login, connectionId, authType) {
     return new UserModel({
-      id: uuid.v4()
-      , login, connectionId, authType
+      id: uuid.v4(),
+      rep: 0,
+      regDate: new Date()
+      , login, connectionId, authType,
     }).sign()
   }
 
@@ -44,6 +49,9 @@ export class UserModel extends Record({
       id: this.id
       , login: this.login
       , authType: this.authType
+      , rep: this.rep
+      , irlName: this.irlName
+      , regDate: this.regDate
     });
   }
 

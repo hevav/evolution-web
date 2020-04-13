@@ -5,8 +5,6 @@ import RIP from 'react-immutable-proptypes'
 import {connect} from 'react-redux';
 import {branch, compose, renderComponent, withState, withStateHandlers} from 'recompose';
 
-import Game from '../views/game/Game.jsx'
-import GameUIv3 from '../views/uiv3/GameUIv3'
 import Room from '../views/rooms/Room.jsx'
 import {userUpdateNameRequest} from '../../shared/actions/auth'
 
@@ -91,7 +89,4 @@ export default compose(
       return {user}
     }
   )
-  // , branch(({game, uiv3}) => uiv3 && game, renderComponent(GameUIv3))
-  // , branch(get('game'), renderComponent(Game))
-  // , branch(get('room'), renderComponent(Room))
 )(Component);

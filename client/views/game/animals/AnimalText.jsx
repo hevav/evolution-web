@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 
 import gecko from '../../../assets/gfx/gecko.svg';
 
-import '../animals/AnimalText.scss';
+import './AnimalText.scss';
 
 export const AnimalText = ({animal, select}) =>(
   <span>

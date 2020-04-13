@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import T from 'i18n-react';
 import {compose} from 'recompose';
 import {connect} from 'react-redux';
@@ -13,14 +13,17 @@ import TextLogin from "./auth/TextLogin";
 import VKAPILogin from './auth/VKAPILogin';
 import TwitterAPILogin from './auth/TwitterAPILogin';
 import Typography from "@material-ui/core/Typography";
+import TopList from "./players/TopList";
+import IgnoreUnignoreTooltip from "../components/IgnoreUnignoreTooltip";
+import OnlineWidget from "./players/OnlineWidget";
 
 const styles = theme => ({
   loginOption: {
     padding: theme.spacing(3)
     , margin: theme.spacing()
         , flexGrow: 1
-        , height: 'calc(100% - ' + theme.spacing.unit * 2 + 'px)'
-        , width: 'calc(100% - ' + theme.spacing.unit * 2 + 'px)'
+        , height: 'calc(100% - ' + theme.spacing(2) + 'px)'
+        , width: 'calc(100% - ' + theme.spacing(2) + 'px)'
         , display: "flex"
         , flexDirection: "column"
         , alignItems: "center"
@@ -31,8 +34,7 @@ const styles = theme => ({
     }
 });
 
-
-export const Login = ({classes, isAuthenticated}) => { //TODO i18n to FAQ
+export const Login = ({classes, isAuthenticated}) => {
     return (
         <Grid container
               direction="column"
@@ -61,16 +63,25 @@ export const Login = ({classes, isAuthenticated}) => { //TODO i18n to FAQ
                     <Grid item xs={12} md={4}>
                         <Paper className={classes.loginOption}>
                             <Typography variant="h4">
+                                {T.translate("App.Top.Top")}
+                            </Typography>
+                            <TopList/>
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                        <Paper className={classes.loginOption}>
+                            <Typography variant="h4">
+                                {T.translate('App.Online')}
+                            </Typography>
+                            <OnlineWidget/>
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                        <Paper className={classes.loginOption}>
+                            <Typography variant="h4">
                                 {T.translate("App.Login.Login")}
                             </Typography>
                             <TextLogin/>
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={12} md={8}>
-                        <Paper className={classes.loginOption}>
-                            <Typography variant="h4">
-                                {T.translate("App.Top.Top")}
-                            </Typography>
                         </Paper>
                     </Grid>
                 </Grid>

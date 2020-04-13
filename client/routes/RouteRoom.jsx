@@ -4,8 +4,7 @@ import RIP from 'react-immutable-proptypes'
 import {connect} from 'react-redux';
 import {branch, compose, renderComponent} from 'recompose';
 
-import Game from '../views/game/Game.jsx'
-import GameUIv3 from '../views/uiv3/GameUIv3'
+import GameUIv3 from '../views/game/GameUIv3'
 import Room from '../views/rooms/Room.jsx'
 
 import get from 'lodash/fp/get';
@@ -18,12 +17,10 @@ export default compose(
       const game = state.get('game');
       const roomId = state.get('room');
       const room = state.getIn(['rooms', roomId]);
-      const uiv3 = state.getIn(['app', 'uiv3']);
-      return {room, game, uiv3}
+      return {room, game}
     }
   )
-  , branch(({game, uiv3}) => uiv3 && game, renderComponent(GameUIv3))
-  , branch(get('game'), renderComponent(Game))
+  , branch(get('game'), renderComponent(GameUIv3))
   , branch(get('room'), renderComponent(Room))
 )(() => (<Typography color={"error"} align={"center"}>
   Error!&nbsp;

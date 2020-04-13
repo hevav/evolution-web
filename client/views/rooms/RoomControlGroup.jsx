@@ -5,6 +5,7 @@ import T from 'i18n-react';
 import {branch, compose, renderNothing, withProps, withStateHandlers} from "recompose";
 import {connect} from 'react-redux';
 import {Route, Router, withRouter} from "react-router";
+import {TransitEnterexit as ExitIcon, RemoveRedEye as SpectateIcon, PlayCircleFilled as StartIcon, ExitToApp as BackIcon, PlayArrow as PlayIcon} from "@material-ui/icons";
 
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -39,6 +40,10 @@ const styles = theme => ({
   , menuItemTextPrimary: {
     color: theme.palette.primary.dark
   }
+  , barPadding: {paddingLeft: '12px'}
+    , noWrap: {
+        whiteSpace: "nowrap"
+    }
 });
 
 export const RoomControlGroupMenu = compose(
@@ -60,7 +65,7 @@ export const RoomControlGroupMenu = compose(
   }))
 )(
   ({
-     classes, text, anchorEl, openMenu, closeMenu
+     classes, text, showText, anchorEl, openMenu, closeMenu
      , userId, room, inRoom, game
      , $back, $exit, $start, $roomJoin, $roomSpectate
    }) => (
@@ -68,41 +73,46 @@ export const RoomControlGroupMenu = compose(
       <List>
         <Divider/>
         <ListItem className={classes.menuItem}>
-          <ListItemText classes={{root: classes.menuItemText, primary: classes.menuItemTextPrimary}} primary={text}/>
+          <ListItemText className={classes.noWrap} classes={{root: classes.menuItemText, primary: classes.menuItemTextPrimary}} primary={(showText)? text : "......"}/>
           {/*<Typography className={classes.menuItem}>{text}</Typography>*/}
         </ListItem>
 
-        {!inRoom && <MenuItem onClick={$back}>{T.translate('App.Room.$Back')}</MenuItem>}
+          {!inRoom && <MenuItem onClick={$back}><BackIcon/><span className={classes.barPadding}>{showText && T.translate('App.Room.$Back')}</span></MenuItem>}
 
         {!game && <MenuItem onClick={$start}
                             disabled={!room.checkCanStart(userId, TimeService.getServerTimestamp())}>
-          {T.translate('App.Room.$Start')}
+            <StartIcon/>
+            <span className={classes.barPadding}>{showText && T.translate('App.Room.$Start')}</span>
         </MenuItem>}
 
         {!game && !!~room.spectators.indexOf(userId)
         && <MenuItem onClick={$roomJoin}
                      disabled={failsChecks(() => checkCanJoinRoomToPlay(room, userId))}>
-          {T.translate('App.Room.$Play')}
+            <PlayIcon/>
+            <span className={classes.barPadding}>{showText && T.translate('App.Room.$Play')}</span>
         </MenuItem>}
 
         {!game && !!~room.users.indexOf(userId)
         && <MenuItem onClick={$roomSpectate}>
-          {T.translate('App.Room.$Spectate')}
+            <SpectateIcon/>
+            <span className={classes.barPadding}>{showText && T.translate('App.Room.$Spectate')}</span>
         </MenuItem>}
 
-        <MenuItem onClick={$exit}>{T.translate('App.Room.$Exit')}</MenuItem>
+        <MenuItem onClick={$exit}>
+            <ExitIcon/>
+            <span className={classes.barPadding}>{showText && T.translate('App.Room.$Exit')}</span></MenuItem>
       </List>
     </>
   ));
 
 // https://github.com/acdlite/recompose/issues/467
 export const RoomControlGroup = (
-  ({history, room, ...props}) => (
+  ({history, room, showText, ...props}) => (
     <Router history={history}>
       <Route render={({location}) => {
         const inRoom = !!~location.pathname.indexOf('room');
         return (
-          <RoomControlGroupMenu text={`${room.name}`} room={room} inRoom={inRoom} {...props}/>
+          <RoomControlGroupMenu showText={showText} text={`${room.name}`} room={room} inRoom={inRoom} {...props}/>
         )
       }}/>
     </Router>
@@ -132,7 +142,7 @@ export const RoomControlGroupView = compose(
     }
     , {roomExitRequest, roomStartVotingRequest, roomJoinRequest, roomSpectateRequest}
   )
-  , withProps(({roomId, inRoom, roomExitRequest, roomStartVotingRequest, roomJoinRequest, roomSpectateRequest}) => ({
+  , withProps(({roomId, inRoom, showText, roomExitRequest, roomStartVotingRequest, roomJoinRequest, roomSpectateRequest}) => ({
     $exit: roomExitRequest
     , $start: roomStartVotingRequest
     , $roomJoin: () => roomJoinRequest(roomId)

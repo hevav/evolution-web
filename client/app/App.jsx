@@ -14,32 +14,50 @@ import {PortalsContext, PortalTarget} from '../views/utils/PortalTarget.jsx'
 import {TranslationSwitchView} from '../components/TranslationSwitch.jsx'
 import ErrorReporter from '../components/ErrorReporter.jsx';
 import AppModal from "./modals/AppModal";
+import geckoHR from '../assets/gfx/geckoHR-opacity.svg';
+import clsx from "clsx";
 
 const styles = theme => ({
   root: {
     display: 'flex'
-    , height: '100%'
+    , minHeight: '100%'
+    , backgroundColor: "#eef5ee"
+    , backgroundImage: "url('"+geckoHR+"')"
+    , backgroundRepeat: "no-repeat"
+    , backgroundPosition: "center center"
+    , backgroundSize: "contain"
+    , backgroundAttachment: "fixed"
   }
-  , appBarSpacer: theme.mixins.toolbar
+  , appBarSpacer: (innerWidth > 1000)? {}: theme.mixins.toolbar
+  , contentWrapper: {
+      display: 'flex',
+      justifyContent: 'center',
+      width: "100%"
+    }
   , content: {
     flexGrow: 1
-    //, padding: theme.spacing.unit
-
+    , padding: theme.spacing(1)
+    //, marginLeft: (innerWidth > 1000)? "240px": "inherit"
     , display: 'flex'
     , flexDirection: 'column'
   }
+  , limit: {
+        maxWidth: "1000px"
+    }
 });
 
-export const App = ({classes}) => {
+export const App = ({classes, game}) => {
   return (
     <div className={classes.root}>
       <CssBaseline />
       <AppBar />
       <ErrorReporter />
       <AppModal />
-      <div className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        {routes}
+      <div className={classes.contentWrapper}>
+          <div className={clsx(classes.content, {[classes.limit]: !game})}>
+              <div className={classes.appBarSpacer}/>
+            {routes}
+          </div>
       </div>
       <svg width="100%" height="100%"
            style={{position: 'absolute', left: '0', top: '0', zIndex: 100, pointerEvents: 'none'}}>
@@ -54,7 +72,13 @@ export const App = ({classes}) => {
 }
 
 export const AppView = compose(
-  PortalsContext
+    connect(
+        (state) => {
+            const game = state.get('game');
+            return {game}
+        }
+    )
+  , PortalsContext
   , withStyles(styles)
 )(App);
 

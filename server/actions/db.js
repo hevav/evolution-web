@@ -42,3 +42,8 @@ export const db$findStats = (from, to) => {
     .project({'_id': 0})
     .toArray();
 };
+
+export const db$getTopList = () => {
+  return database.db.collection('users').find().sort({rep: -1}).limit(7)
+    .toArray();
+};

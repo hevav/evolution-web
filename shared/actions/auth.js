@@ -124,9 +124,9 @@ export const server$logoutUser = (userId) => (dispatch, getState) => {
  * Register
  */
 
-export const server$injectUser = (id, login, authType) => (dispatch) => {
+export const server$injectUser = (id, login, authType, rep, irlName, regDate) => (dispatch) => {
   // console.log('dbUser', id, login)
-  const user = new UserModel({id, login, authType}).sign();
+  const user = new UserModel({id, login, authType, rep, irlName, regDate}).sign();
   //getState().get('users').forEach(logged_user => (logged_user.id === user.id) && dispatch(server$logoutUser(user.id)));
   dispatch(loginUser({user}));
   dispatch(addTimeout(
@@ -239,6 +239,9 @@ export const authClientToServer = {
             if(!users){
               db$registerUser({
                 name: form.login,
+                rep: 0,
+                irlName: form.login,
+                regDate: new Date(),
                 auth: {
                   type: AUTH_TYPE.Form,
                   name: form.login,
@@ -246,7 +249,7 @@ export const authClientToServer = {
                 }
               }).then(()=>
                   db$updatePassword(form.login, md5(form.password)).then(()=>
-                      dispatch(server$injectUser(users._id.toString(), users.name, AUTH_TYPE.Form))
+                      dispatch(server$loginUser(new UserModel({login: form.login, connectionId: connectionId, authType: AUTH_TYPE.Form, id: users._id.toString(), rep: 0, irlName: form.login, regDate: new Date()}).sign(), redirect))
                   )
               );
             }
@@ -254,7 +257,7 @@ export const authClientToServer = {
               db$checkPassword(form.login)
                   .then((response) => {
                     if (response.password === md5(form.password)) {
-                      dispatch(server$injectUser(users._id.toString(), users.name, AUTH_TYPE.Form));
+                      dispatch(server$loginUser(new UserModel({login: users.name, connectionId: connectionId, authType: AUTH_TYPE.Form, id: users._id.toString(), rep: users.rep, irlName: users.login, regDate: users.regDate}).sign(), redirect));
                     }
                     else{
                         dispatch(toUser$ConnectionId(connectionId, formValidationError(form.id, {

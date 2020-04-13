@@ -29,7 +29,10 @@ export const server$oauthVKRegister = (protocol = 'http', host, code) => (dispat
       db$findUser(AUTH_TYPE.VK, user_id)
         .then((user) => server$getUserInfo(user_id, access_token, expires_in)
           .then((userInfo) => ({
-            name: userInfo.first_name + ' ' + userInfo.last_name
+            name: (userInfo.domain)? userInfo.domain : userInfo.first_name + ' ' + userInfo.last_name
+            , rep: 0
+            , irlName: userInfo.first_name + ' ' + userInfo.last_name
+            , regDate: new Date()
             , auth: {
               type: AUTH_TYPE.VK
               , id: user_id
@@ -43,7 +46,7 @@ export const server$oauthVKRegister = (protocol = 'http', host, code) => (dispat
               ? db$registerUser(updateObject)
               : db$updateUserByAuth(AUTH_TYPE.VK, user_id, updateObject))
               .then(() => db$findUser(AUTH_TYPE.VK, user_id))
-              .then((result) => dispatch(server$injectUser(result._id.toString(), result.name, AUTH_TYPE.VK)))
+              .then((result) => dispatch(server$injectUser(result._id.toString(), result.name, AUTH_TYPE.VK, result.rep, result.irlName, result.regDate)))
           })
         )
     )
@@ -58,6 +61,7 @@ export const server$getUserInfo = (user_id, access_token, expires_in) =>
   requestGet('https://api.vk.com/method/users.get?' + querystring.stringify({
       access_token
       , v: API_VERSION
+      , fields: "domain"
     }))
     .then((response) => {
       const body = (typeof response.body === 'string') ? JSON.parse(response.body) : response.body;

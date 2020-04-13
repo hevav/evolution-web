@@ -12,7 +12,7 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import IconButton from '@material-ui/core/IconButton';
 import IconVisibility from '@material-ui/icons/Visibility'
 
-import {roomJoinRequestSoft, roomSpectateRequestSoft} from '../../../shared/actions/actions';
+import {roomCreateRequest, roomJoinRequestSoft, roomSpectateRequestSoft} from '../../../shared/actions/actions';
 
 import {passesChecks, failsChecks} from '../../../shared/actions/checks';
 import {
@@ -20,6 +20,26 @@ import {
   checkCanJoinRoomToSpectate, checkUserInRoom,
   checkUserNotInPlayers, isUserInPlayers
 } from '../../../shared/actions/rooms.checks';
+import Typography from "@material-ui/core/Typography/Typography";
+import {compose} from "recompose";
+import IconCreateRoom from "@material-ui/icons/AddCircle";
+import Button from "@material-ui/core/Button";
+
+const CreateRoom = compose(
+    connect(
+        (state) => ({room: state.get('room')})
+        , (dispatch) => ({$createRequest: () => dispatch(roomCreateRequest())})
+    )
+    // , branch(({room}) => !room, renderNothing)
+)(({$createRequest}) => (
+    <Button
+        color="secondary"
+        variant="outlined"
+        style={{width: "100%"}}
+        onClick={$createRequest}>
+      <IconCreateRoom fontSize="large" />
+    </Button>
+));
 
 export class RoomsList extends React.Component {
   static propTypes = {
@@ -32,6 +52,7 @@ export class RoomsList extends React.Component {
     const {rooms, userId, $roomJoin, $roomSpectate} = this.props;
     return (
       <List className="RoomsList">
+          <CreateRoom />
         {rooms.map(room =>
           <ListItem key={room.id}
                     button

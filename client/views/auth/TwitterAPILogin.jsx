@@ -8,8 +8,8 @@ import AccountBoxIcon from "@material-ui/icons/AccountBox";
 
 const styles = theme => ({
   root: {
-    padding: theme.spacing.unit,
-    margin: theme.spacing.unit/2
+    padding: theme.spacing(1),
+    margin: theme.spacing(0.5)
   }
 });
 

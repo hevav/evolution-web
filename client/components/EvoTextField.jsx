@@ -13,6 +13,7 @@ export const EvoTextField = ({type, name, error,  value, onChange, ...props}) =>
     name={name}
     type={(type)?type:"text"}
     error={!!error}
+    onChange={onChange}
     helperText={error}
     margin='normal'
   />

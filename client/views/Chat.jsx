@@ -16,7 +16,7 @@ import TimeService from '../services/TimeService';
 
 import {CHAT_MESSAGE_LENGTH, CHAT_TARGET_TYPE} from '../../shared/models/ChatModel';
 import {chatMessageRequest} from '../../shared/actions/actions';
-import GameStyles from "./uiv3/GameStyles";
+import GameStyles from "./game/GameStyles";
 import IgnoreUnignoreTooltip from "../components/IgnoreUnignoreTooltip";
 
 const styles = theme => ({
@@ -25,6 +25,7 @@ const styles = theme => ({
     , flexDirection: 'column'
     , minHeight: '7em'
     , height: '100%'
+    , width: '100%'
   }
   , window: {
     overflowY: 'auto'

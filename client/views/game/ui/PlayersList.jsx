@@ -1,94 +1,41 @@
-import {List} from 'immutable';
 import React from 'react';
 import PropTypes from 'prop-types';
-import T from 'i18n-react';
-import cn from 'classnames';
-import {connect} from 'react-redux';
 
-import {GameModel, GameModelClient} from '../../../../shared/models/game/GameModel';
+import {GameModelClient} from '../../../../shared/models/game/GameModel';
+import withStyles from "@material-ui/core/styles/withStyles";
+import PlayerUser from "./PlayerUser";
+import {connect} from "react-redux";
+import {List} from "immutable";
+import User from "../../players/User";
+import SpectatorIcon from '@material-ui/icons/RemoveRedEye';
+import Grid from "@material-ui/core/Grid";
 
-import Badge from '@material-ui/core/Badge'
-import Tooltip from '../../utils/WhiteTooltip'
-
-import IconPause from '@material-ui/icons/Pause'
-
-import User from '../../utils/User.jsx';
-import UsersList from '../../utils/UsersList.jsx';
-
-import {
-  roomKickRequest,
-  roomBanRequest
-} from '../../../../shared/actions/actions';
-import {UserVariants} from "../../utils/User";
-import Typography from "@material-ui/core/Typography/Typography";
-
-export class PlayersList extends React.PureComponent {
-  static propTypes = {
-    game: PropTypes.instanceOf(GameModelClient).isRequired
-  };
-
-  render() {
-    const {game} = this.props;
-    return <div className='PlayersList'>
-      <Typography variant='h6'
-                  style={{display: 'inline-block'}}>
-        {T.translate('App.Room.Players')}:
-      </Typography>
-      {this.renderSpectators()}
-      <div className='PlayersListUL'>
-        {game.sortPlayersFromIndex(game.players)
-          .map(player => this.renderPlayer(game, player))}
-      </div>
-    </div>
+const withSpectators = connect((state) => {
+  const roomId = state.get('room');
+  return {
+    spectators: state.getIn(['rooms', roomId, 'spectators'], List())
   }
+});
 
-  renderPlayer(game, player) {
-    const className = cn({
-      Player: true
-      , isPlayerTurn: game.isPlayerTurn(player.id)
-      , ended: player.ended
-    });
-    return <Typography key={player.id} className={className}>
-      <User id={player.id} variant='simple'/> {player.getWantsPause() && <IconPause className='Icon'/>}
-    </Typography>
-  }
+const styles = theme => ({
+  PlayersList: {}
+});
 
-  renderSpectators() {
-    const spectatorsList = this.props.spectatorsList;
-    return (
-      spectatorsList.size > 0 && <Tooltip title={this.renderSpectatorsList()} interactive>
-      <span>
-        <Badge badgeContent={spectatorsList.size} color='secondary'>&nbsp;</Badge>
-      </span>
-      </Tooltip>
-    )
-  }
+export const PlayersList = withStyles(styles)(({classes, game, spectators}) => (
+  <div className={classes.PlayersList}>
+    {game.sortPlayersFromIndex(game.players).map(player => <PlayerUser key={player.id} game={game} playerId={player.id}/>)}
+    {spectators && spectators.size > 0 && spectators.map(userId =>
+        <span key={userId}>
+            <User id={userId}/>
+            &nbsp;
+            (<SpectatorIcon color="secondary" style={{fontSize: "0.875rem"}}/>)
+        </span>
+    )}
+  </div>
+));
 
-  renderSpectatorsList() {
-    const {isHost, spectatorsList, $Kick, $Ban} = this.props;
+PlayersList.propTypes = {
+  game: PropTypes.instanceOf(GameModelClient).isRequired
+};
 
-    return (<div>
-      <Typography variant='h4'>{T.translate('App.Room.Spectators')}</Typography>
-      <UsersList list={spectatorsList}>{({user}) => (
-        <UserVariants.listItem user={user}/>
-      )}</UsersList>
-    </div>);
-  }
-}
-
-const PlayersListView = connect((state, {game}) => {
-    const userId = state.getIn(['user', 'id']);
-    const roomId = state.get('room');
-    const isHost = state.getIn(['rooms', roomId, 'users', 0]) === userId;
-    return {
-      isHost
-      , spectatorsList: state.getIn(['rooms', roomId, 'spectators'], List())
-    }
-  }
-  , (dispatch) => ({
-    $Kick: (userId) => dispatch(roomKickRequest(userId))
-    , $Ban: (userId) => dispatch(roomBanRequest(userId))
-  }))(PlayersList);
-
-
-export default PlayersListView;
+export default withSpectators(PlayersList);

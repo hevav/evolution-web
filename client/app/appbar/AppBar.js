@@ -18,7 +18,6 @@ import GameScoreboardFinal from "../../views/game/ui/GameScoreboardFinal";
 import AppBarMenu from "./AppBarMenu";
 import IconMenu from '@material-ui/icons/Menu';
 import {SettingVolumeMenuItem} from "./SettingVolume";
-import {SettingUIv3MenuItem} from "./SettingUIv3";
 import LinkProfile from "../../components/profile/LinkProfile";
 import GuardUser from "../../components/GuardUser";
 import IconButton from "@material-ui/core/IconButton";
@@ -26,6 +25,9 @@ import Drawer from "@material-ui/core/Drawer";
 import Divider from "@material-ui/core/Divider";
 import Profile from "../../components/profile/Profile";
 import List from "@material-ui/core/List";
+import gecko from "../../assets/gfx/gecko-080.svg";
+import clsx from "clsx";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const styles = theme => ({
   title: {
@@ -33,13 +35,36 @@ const styles = theme => ({
     , minWidth: '1em'
   }
   , titleDrawer: {
-    margin: '24px'
+    marginTop: '12px',
+    whiteSpace: "nowrap"
+  }
+  , drawer: {
+    overflow: "hidden",
+    flexShrink: 0,
+    width: "60px"
+  }
+  , drawerOpened: {
+    width: "240px",
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  }
+  , drawerClosed: {
+    width: "59px",
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  }
+  , noWrap: {
+    whiteSpace: "nowrap"
   }
   , appBarMenu: {
     margin: '5px'
   }
-  , drawerItem: {
-    paddingLeft: '24px'
+  , drawerItemText: {
+    paddingLeft: '12px'
   }
   , portal: {
     whiteSpace: 'nowrap'
@@ -56,8 +81,12 @@ const styles = theme => ({
 
 export const AppBar = function ({classes}) {
   const [open, setOpen] = React.useState(false);
-  return (
-  <MUIAppBar>
+  let showText = true;
+  let setText = ()=>{};
+  if(innerWidth > 1000)
+    [showText, setText] = React.useState(false);
+  return ([
+  <MUIAppBar key={0} position="fixed" style={{display: (innerWidth > 1000)?"none":"inherit"}}>
     <Toolbar>
       <IconButton
           color="inherit"
@@ -69,48 +98,66 @@ export const AppBar = function ({classes}) {
         <EvoLink to='/' variant="h4" color="inherit">{T.translate('App.Name')}</EvoLink>
       </div>
     </Toolbar>
-    <Drawer
-        anchor="left"
-        open={open}
-        onClose={()=>setOpen(false)}>
-      <div className={classes.titleDrawer}>
-        <EvoLink to='/' variant="h4" color="inherit">
-          <Typography variant="h4">{T.translate('App.Name')}</Typography>
-        </EvoLink>
-        <Typography variant="caption" color="inherit">v{GLOBAL_VERSION}</Typography>
-      </div>
-      <List>
-        <Divider/>
-        <GuardUser>
-          <SettingVolumeMenuItem className={classes.drawerItem}/>
-          <SettingUIv3MenuItem className={classes.drawerItem}/>
-          <LinkProfile className={classes.drawerItem}/>
-          <Profile />
-          <RoomControlGroup className={classes.drawerItem}/>
-          <GameScoreboardFinal className={classes.drawerItem}/>
-          <AdminControlGroup className={classes.drawerItem}/>
-        </GuardUser>
-      </List>
+  </MUIAppBar>,
+  <Drawer
+      key={2}
+      anchor="left"
+      open={open}
+      variant={(innerWidth > 1000) && "permanent"}
+      edge="start"
+      onClose={()=>setOpen(false)}
+      //onClick={()=>setText(!showText)}
+      onMouseEnter={()=>setText(true)}
+      onMouseLeave={()=>setText(false)}
+      className={classes.drawer}
+      classes={{"paper": clsx(classes.drawer, {
+          [classes.drawerClosed]: !showText,
+          [classes.drawerOpened]: showText
+        })}}
+  >
+    <MenuItem>
+      <EvoLink to='/' color="inherit" className={classes.titleDrawer}>
+        <img src={gecko} style={{height: "26px"}}/>
+        {
+          showText && <span className={classes.drawerItemText}>{T.translate('App.Name')} Online</span>
+        }
+      </EvoLink>
+    </MenuItem>
+    <List>
       <Divider/>
+      <GuardUser>
+        <SettingVolumeMenuItem showText={showText}/>
+        <LinkProfile showText={showText}/>
+        <Profile showText={showText}/>
+        <RoomControlGroup showText={showText}/>
+        <GameScoreboardFinal showText={showText}/>
+        <AdminControlGroup showText={showText}/>
+      </GuardUser>
+      <Divider/>
+    </List>
 
-      <span className={classes.spacer}>&nbsp;</span>
+    <span className={classes.spacer}>&nbsp;</span>
 
-      <Button className={classes.button}
-              target="blank"
-              variant="outlined"
-              color="secondary"
-              href="https://vk.com/evolveonline">
-        {T.translate('App.Misc.VKGroup')}
-      </Button>
+    { showText && <Button className={classes.button}
+            target="blank"
+            variant="outlined"
+            color="secondary"
+            href="https://vk.com/evolveonline">
+      {T.translate('App.Misc.VKGroup')}
+    </Button> }
 
-      <Button className={classes.button}
-              target="blank"
-              color="inherit"
-              href={T.translate('App.Misc.FAQ_HREF')}>
-        {T.translate('App.Misc.FAQ')}
-      </Button>
-    </Drawer>
-  </MUIAppBar>
+    { showText && <Button className={classes.button}
+            target="blank"
+            color="inherit"
+            href={T.translate('App.Misc.FAQ_HREF')}>
+      {T.translate('App.Misc.FAQ')}
+    </Button>
+    }
+    {showText &&
+    <Typography variant="caption" color="inherit" className={classes.noWrap}>
+      Evolution-web v{GLOBAL_VERSION}
+    </Typography>}
+  </Drawer>]
   )};
 
 export default withStyles(styles)(AppBar);

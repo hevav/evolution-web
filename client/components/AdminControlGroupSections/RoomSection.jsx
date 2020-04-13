@@ -32,20 +32,18 @@ export class RoomSection extends Component {
   }
 
   render() {
-    return <div>
+    return (<div style={{maxHeight: "200px"}}>{this.props.showText && <div>
       {this.props.gameCanStart
         ? <MenuItem
                   onClick={this.props.$start(this.props.roomId, this.state.gameSeed)}>
-          Start Game
+              Start Game
         </MenuItem>
         : null}
-      <Input
+      <Input style={{padding: "24px", whiteSpace: "nowrap"}}
         multiline={true}
-        fullWidth={true}
-        style={{padding: "24px"}}
         value={this.state.gameSeed}
         onChange={(e) => this.setGameSeed(e.target.value)}/>
-    </div>
+    </div>}</div>)
   }
 }
 

@@ -9,7 +9,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import IconLog from '@material-ui/icons/List';
 
-import User from '../../utils/User.jsx';
+import User from '../../players/User.jsx';
 import AnimalText from '../animals/AnimalText.jsx';
 
 import TimeService from '../../../services/TimeService';
@@ -22,7 +22,7 @@ const format = (str, arr) => str.replace(DATA_REGEX, (match, number) => typeof a
 import replace from 'react-string-replace';
 
 import './GameLog.scss';
-import Food from "../../uiv3/food/Food";
+import Food from "../food/Food";
 
 const customLog = {
   gameGiveCards: (message, values) => {
