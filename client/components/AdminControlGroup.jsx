@@ -5,7 +5,6 @@ import {RoomSectionView} from './AdminPanelSections/RoomSection.jsx';
 import {GameSectionView} from './AdminPanelSections/GameSection.jsx';
 import {branch, compose, renderNothing, withStateHandlers} from "recompose";
 import get from "lodash/fp/get";
-import Game from "../views/game/Game";
 import {redirectTo} from "../../shared/utils/history";
 import AppBarMenu from "../app/appbar/AppBarMenu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -19,12 +18,12 @@ import Divider from "@material-ui/core/Divider";
 
 const styles = theme => ({});
 
-export const AdminMenu = ({room}) => {
+export const AdminMenu = ({room, showText}) => {
     if (room) return (
         <List text='admin'>
             {<Divider/>}
-            {!room.gameId && <RoomSection/>}
-            {!!room.gameId && <GameSection/>}
+            {!room.gameId && <RoomSection showText={showText}/>}
+            {!!room.gameId && <GameSection showText={showText}/>}
         </List>)
     else return null;
 };
