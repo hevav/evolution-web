@@ -18,7 +18,7 @@ import {CHAT_MESSAGE_LENGTH, CHAT_TARGET_TYPE} from '../../shared/models/ChatMod
 import {chatMessageRequest} from '../../shared/actions/actions';
 import GameStyles from "./game/GameStyles";
 import IgnoreUnignoreTooltip from "../components/IgnoreUnignoreTooltip";
-import User from "./utils/User";
+import User from "./players/User";
 
 const styles = theme => ({
   root: {

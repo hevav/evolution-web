@@ -21,7 +21,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
 import withStyles from "@material-ui/core/styles/withStyles";
-import {branch, compose, renderNothing} from "recompose";
 import {Score as ScoreIcon} from "@material-ui/icons";
 import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
