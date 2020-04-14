@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types'
+import cn from 'classnames'
 import {connect} from 'react-redux';
 
 import ListItem from "@material-ui/core/ListItem";
@@ -8,6 +9,7 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Tooltip from "@material-ui/core/Tooltip/Tooltip";
 import T from "i18n-react";
 
+import PersonIcon from '@material-ui/icons/Person';
 import IconButton from "@material-ui/core/IconButton";
 import IconKickUser from '@material-ui/icons/Clear';
 import IconBanUser from '@material-ui/icons/Block';
@@ -24,28 +26,37 @@ const defaultUser = (id) => ({
   id, login: '---'
 });
 
+const cnUser = (user, className = '') => cn(
+  'User'
+  , className
+  , {auth: user.authType}
+);
+
 export const UserVariants = {
-  simple: ({user}) =>
-      <span className='User'>
-    { (user.authType === "Form") ? <AccountBoxIcon style={{verticalAlign: 'middle', fontSize: "18px", height: "14px", margin: "2px"}}/> : (user.authType === "VK")? <img src={VKIcon} style={{verticalAlign: 'middle', height: "14px", margin: "2px"}}/> : ""}
-    {user.login}
-      </span>
-  , typography: ({user, className}) => (
+  simple: ({user, login, showAuth, className}) => (
+    <span className={cnUser(user, className)}>
+      {showAuth && user.authType && (<PersonIcon className='icon'/>)}{login || user.login}
+    </span>
+  )
+  , typography: ({user, login, showAuth, className}) => (
     <Typography display='inline'
-                className={'User' + (className ? ' ' + className : '')}
+                className={cnUser(user, className)}
                 color='inherit'
                 component='span'>
-      {user.login}
+      {showAuth && user.authType && (<PersonIcon className='icon'/>)}{login || user.login}
     </Typography>
   )
-  , listItem: ({user, actions}) => (
-    <ListItem key={user.id} className='User' style={{width: 'auto'}}>
-      <ListItemText primary={user.login}/>
-      {!!actions ? actions : null}
-    </ListItem>
-  )
-  , listItemWithActions: ({user, userId, isHost, roomKickRequest, roomBanRequest}) => (
-    <UserVariants.listItem user={user} actions={
+  , listItem: (props) => {
+    const {user, login, actions} = props;
+    return (
+      <ListItem key={user.id} className={cnUser(user)} style={{width: 'auto'}}>
+        <ListItemText primary={UserVariants.simple(props)}/>
+        {!!actions ? actions : null}
+      </ListItem>
+    )
+  }
+  , listItemWithActions: ({user, userId, isHost, roomKickRequest, roomBanRequest, ...props}) => (
+    <UserVariants.listItem user={user} {...props} actions={
       user.id !== userId && isHost && <ListItemSecondaryAction>
         <Tooltip title={T.translate('App.Room.$Kick')}>
           <IconButton onClick={() => roomKickRequest(user.id)}><IconKickUser/></IconButton>

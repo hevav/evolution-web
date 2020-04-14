@@ -20,6 +20,7 @@ import {
   getStaticDefenses
 } from "../models/game/evolution/traitsData/TraitCarnivorous";
 import {getTraitDataModel} from "../models/game/evolution/TraitModel";
+import {server$traitActivate} from "./trait";
 
 export const checkTraitActivation = (game, animal, traitId, ...targets) => {
   const gameId = game.id;
@@ -170,14 +171,43 @@ export const getErrorOfAnimalEatingFromGame = (game, animal) => {
   );
 };
 
+export const getErrorsOfPlantFoodDefence = (game, animal, plant) => plant.getTraits()
+  .map(trait => [trait.id, trait.getDataModel().getErrorOfFoodIntake(game, plant, animal)])
+  .filter(([traitId, error]) => error);
+
 export const getErrorOfAnimalEatingFromPlantNoCD = (game, animal, plant) => {
   if (plant.getFood() < 1) return ERRORS.PLANT_FOOD;
   if (animal.hasTrait(tt.TraitCarnivorous) && !plant.isFruit()) return ERRORS.PLANT_FOOD_FRUIT;
+  const errorOfAnimalEating = getErrorOfAnimalEating(game, animal);
+  if (errorOfAnimalEating) return errorOfAnimalEating;
 
-  return (
-    getErrorOfAnimalEating(game, animal)
-    || getErrorInList(plant.getTraits(), trait => trait.getDataModel().getErrorOfFoodIntake(game, plant, animal))
-  );
+  const traitSpecialization = animal.hasTrait(tt.TraitSpecialization);
+  if (traitSpecialization) {
+    if (animal.traits.filter(trait => !trait.disabled && trait.type === tt.TraitSpecialization).size > 1) {
+      return tt.TraitSpecialization;
+    }
+    if (plant.id !== traitSpecialization.linkAnimalId) {
+      return tt.TraitSpecialization;
+    } else {
+      return false
+    }
+  }
+
+  const errorsOfFoodIntake = getErrorsOfPlantFoodDefence(game, animal, plant);
+
+  if (errorsOfFoodIntake.size > 1) {
+    const [errorTraitId, errorMessage] = errorsOfFoodIntake.first();
+    return errorMessage;
+  } else if (errorsOfFoodIntake.size === 1) {
+    const [errorTraitId, errorMessage] = errorsOfFoodIntake.first();
+
+    const traitIntellect = animal.hasTrait(tt.TraitIntellect);
+    if (!traitIntellect) return errorMessage;
+
+    if (traitIntellect.value !== errorTraitId && traitIntellect.getErrorOfUse(game, animal)) return errorMessage;
+  }
+
+  return false;
 };
 
 export const getErrorOfAnimalEatingFromPlant = (game, animal, plant) => (
@@ -216,6 +246,11 @@ export const getErrorOfPlantCounterAttack = (game, animal, plant) => {
   const defenses = getStaticDefenses(game, plant, animal);
   if (defenses.length > 1) return ERRORS.TRAIT_ATTACK_TOO_MUCH_DEFENSES;
 
+  const traitSpecialization = animal.hasTrait(tt.TraitSpecialization);
+  if (traitSpecialization && traitSpecialization.linkAnimalId === plant.id) {
+    return tt.TraitSpecialization;
+  }
+
   return getErrorOfPlantAttackBase(game, animal, plant);
 };
 
@@ -225,7 +260,7 @@ export const checkAnimalCanTakeShellFails = (game, animal) => {
   if (game.cooldowns.checkFor(TRAIT_COOLDOWN_LINK.TAKE_SHELL, animal.ownerId, animal.id)) return ERRORS.COOLDOWN;
   if (animal.hasFlag(TRAIT_ANIMAL_FLAG.REGENERATION)) return ERRORS.TRAIT_REGENERATION_DEAD;
   const traitRegeneration = animal.hasTrait(tt.TraitRegeneration, true);
-  if (traitRegeneration && !traitRegeneration.getDataModel().checkTraitPlacement(animal)) return ERRORS.TRAIT_REGENERATION_TRAIT_MAX;
+  if (traitRegeneration && traitRegeneration.getDataModel()._getErrorOfTraitPlacement(animal)) return ERRORS.TRAIT_REGENERATION_TRAIT_MAX;
   return false;
 };
 

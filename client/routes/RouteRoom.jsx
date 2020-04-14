@@ -3,13 +3,14 @@ import PropTypes from 'prop-types'
 import RIP from 'react-immutable-proptypes'
 import {connect} from 'react-redux';
 import {branch, compose, renderComponent} from 'recompose';
-
-import GameUIv3 from '../views/game/GameUIv3'
-import Room from '../views/rooms/Room.jsx'
-
 import get from 'lodash/fp/get';
+
 import Typography from "@material-ui/core/Typography/Typography";
+
 import EvoLink from "../components/EvoLink";
+
+import GameUIv3 from '../views/uiv3/GameUIv3'
+import Room from '../views/rooms/Room.jsx'
 
 export default compose(
   connect(

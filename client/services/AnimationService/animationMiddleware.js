@@ -1,6 +1,5 @@
 import AnimationManager from './AnimationManager';
 import Velocity from 'velocity-animate';
-import kostilAnimations from '../../views/game/animations' // TODO remove this abomination. I'm sorry
 
 export const animationComponentSubscribe = (name, html) => ({type: 'animationComponentSubscribe', data: {name, html}});
 export const animationComponentUnsubscribe = (name) => ({type: 'animationComponentUnsubscribe', data: {name}});
@@ -45,7 +44,7 @@ export default (subscriptions = {}) => {
           if (animations.size > 0) {
             queue.push(action);
           } else {
-            let animationArray = kostilAnimations[action.type];
+            let animationArray = subscriptions[action.type];
 
             if (animationArray) {
               const id = ID++;

@@ -20,6 +20,7 @@ import {getFeedingCooldownList, server$startCooldownList, server$traitStartCoold
 export const PlantTraitHiddenCarnivorous = Object.assign({}, TraitCarnivorous, {
   type: ptt.PlantTraitHiddenCarnivorous
   , hidden: true
+  , playerControllable: true
   , cooldowns: fromJS([
     [ptt.PlantTraitHiddenCarnivorous, TRAIT_COOLDOWN_PLACE.TRAIT, TRAIT_COOLDOWN_DURATION.TURN]
     , [TRAIT_COOLDOWN_LINK.EATING, TRAIT_COOLDOWN_PLACE.PLAYER, TRAIT_COOLDOWN_DURATION.ROUND]
@@ -70,7 +71,8 @@ export const PlantTraitHoney = {
 };
 export const PlantTraitMycorrhiza = {
   type: ptt.PlantTraitMycorrhiza
-  , cardTargetType: CARD_TARGET_TYPE.PLANT_LINK
+  , cardTargetType: CARD_TARGET_TYPE.PLANT
+  , linkTargetType: CARD_TARGET_TYPE.PLANT
 };
 export const PlantTraitOfficinalis = {
   type: ptt.PlantTraitOfficinalis
@@ -88,10 +90,12 @@ export const PlantTraitParasiticPlant = {
 export const PlantTraitParasiticLink = {
   type: ptt.PlantTraitParasiticLink
   , playerControllable: true
-  , cardTargetType: CARD_TARGET_TYPE.PLANT_LINK
+  , cardTargetType: CARD_TARGET_TYPE.PLANT
+  , linkTargetType: CARD_TARGET_TYPE.PLANT
   , targetType: TRAIT_TARGET_TYPE.NONE
   , cooldowns: fromJS([
     [TRAIT_COOLDOWN_LINK.EATING, TRAIT_COOLDOWN_PLACE.PLAYER, TRAIT_COOLDOWN_DURATION.ROUND]
+    , [ptt.PlantTraitParasiticLink, TRAIT_COOLDOWN_PLACE.PLAYER, TRAIT_COOLDOWN_DURATION.ROUND]
   ])
   , _getErrorOfUse: (game, plant, trait) => {
     // if (game.cooldowns.checkFor())

@@ -15,7 +15,6 @@ import {
 } from '../models/game/evolution/constants';
 
 import {server$game, to$} from './generic';
-import {doesPlayerHasOptions} from './ai';
 import {
   server$gameEndTurn
   , server$addTurnTimeout
@@ -50,7 +49,7 @@ import {
   , getErrorOfPlantCounterAttack
   , checkTraitActivation_Target
   , getErrorOfAnimalTakingCover
-  , getErrorOfAnimalEatingFromPlantNoCD
+  , getErrorOfAnimalEatingFromPlantNoCD, getErrorsOfPlantFoodDefence
 } from './trait.checks';
 
 import {addTimeout, cancelTimeout} from '../utils/reduxTimeout';
@@ -589,8 +588,45 @@ export const server$startFeeding = (gameId, animalId, amount, sourceType, source
     if (sourcePlant.hasTrait(ptt.PlantTraitHoney)) {
       dispatch(server$takeCardFromRandomPlayer(game, animal.ownerId));
     }
-    if (sourcePlant.hasTrait(ptt.PlantTraitOfficinalis)) {
-      dispatch(server$game(game.id, traitParalyze(game.id, animal.id)));
+
+    const errorsOfFoodIntake = getErrorsOfPlantFoodDefence(game, animal, sourcePlant);
+
+    const traitSpecialization = animal.getTraits()
+      .find(trait => (trait.type === tt.TraitSpecialization && trait.linkAnimalId === sourceId));
+
+    const traitIntellect = animal.hasTrait(tt.TraitIntellect);
+    const disabledTraitId = traitIntellect && traitIntellect.value;
+    const canActivateIntellect = traitIntellect && disabledTraitId === void 0 && !traitIntellect.getErrorOfUse(game, animal);
+
+    const plantTraitOfficinalis = sourcePlant.hasTrait(ptt.PlantTraitOfficinalis);
+
+    if (traitSpecialization) {
+      // everything is OK, do nothing
+    } else if (errorsOfFoodIntake.size === 0) {
+      if (plantTraitOfficinalis) {
+        if (canActivateIntellect) {
+          dispatch(traitIntellect.getDataModel().action(game, animal, traitIntellect, plantTraitOfficinalis.id));
+        } else if (plantTraitOfficinalis.id !== disabledTraitId) {
+          dispatch(server$game(game.id, traitParalyze(game.id, animal.id)));
+        }
+      }
+    } else if (errorsOfFoodIntake.size === 1) {
+      const [errorTraitId, errorMessage] = errorsOfFoodIntake.first();
+
+      if (canActivateIntellect) {
+        dispatch(traitIntellect.getDataModel().action(game, animal, traitIntellect, errorTraitId));
+        if (sourcePlant.hasTrait(ptt.PlantTraitOfficinalis)) {
+          dispatch(server$game(game.id, traitParalyze(game.id, animal.id)));
+        }
+      } else if (disabledTraitId === errorTraitId) {
+        if (sourcePlant.hasTrait(ptt.PlantTraitOfficinalis)) {
+          dispatch(server$game(game.id, traitParalyze(game.id, animal.id)));
+        }
+      } else {
+        logger.error(`Game${game.id}: Invalid plant feeding 1`, sourcePlant.toString(), animal.toString());
+      }
+    } else {
+      logger.error(`Game${game.id}: Invalid plant feeding 2`, sourcePlant.toString(), animal.toString());
     }
   }
 
@@ -616,7 +652,7 @@ export const server$startFeeding = (gameId, animalId, amount, sourceType, source
       }
     }
 
-    if (trait.type === tt.TraitPlantGrazing) {
+    if (sourceType === 'PLANT' && trait.type === tt.TraitPlantGrazing) {
       dispatch(server$traitSetValue(game, animal, trait, sourceId));
     }
   });
@@ -723,6 +759,12 @@ export const server$continueFeedingFromGame = (gameId, feedingRecord) => (dispat
   }
 
   return ambushers.length === 0;
+};
+
+export const server$traitTakeCover = (gameId, userId, animalId, plantId) => dispatch => {
+  dispatch(server$game(gameId, startCooldown(gameId, TRAIT_COOLDOWN_LINK.EATING, TRAIT_COOLDOWN_DURATION.ROUND, TRAIT_COOLDOWN_PLACE.PLAYER, userId)));
+  dispatch(server$game(gameId, traitTakeCover(gameId, animalId, plantId)));
+  dispatch(server$playerActed(gameId, userId));
 };
 
 /**
@@ -1006,9 +1048,7 @@ export const traitClientToServer = {
     const plant = checkGameHasPlant(game, plantId);
     throwError(getErrorOfAnimalTakingCover(game, animal, plant));
 
-    dispatch(server$game(gameId, startCooldown(gameId, TRAIT_COOLDOWN_LINK.EATING, TRAIT_COOLDOWN_DURATION.ROUND, TRAIT_COOLDOWN_PLACE.PLAYER, userId)));
-    dispatch(server$game(gameId, traitTakeCover(gameId, animalId, plantId)));
-    dispatch(server$playerActed(gameId, userId));
+    dispatch(server$traitTakeCover(gameId, userId, animalId, plantId));
   }
   , traitAmbushActivateRequest: ({gameId, animalId, on}, {userId}) => (dispatch, getState) => {
     const game = selectGame(getState, gameId);

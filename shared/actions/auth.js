@@ -90,7 +90,7 @@ export const onlineUpdate = (user) => ({
 
 export const server$loginUser = (user, redirect) => (dispatch, getState) => {
   if (!user.id) throw new Error('User has no ID');
-  loggerOnline.info(`User ${user.login} joined`);
+  // loggerOnline.info(`User ${user.login} joined`);
   const online = getState().get('users').map(u => u.toOthers());
   const rooms = getState().get('rooms');
   //getState().get('users').forEach(logged_user => (logged_user.id === user.id) && dispatch(server$logoutUser(user.id)));
@@ -304,7 +304,7 @@ export const authClientToServer = {
 };
 
 export const authServerToClient = {
-  loginUser: ({user, redirect = '/', online}) => (dispatch) => {
+  loginUser: ({user, redirect = '/', online}) => (dispatch, getState) => {
     user = UserModel.fromJS(user);
     dispatch(loginUser({
       user: user

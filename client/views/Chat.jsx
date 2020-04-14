@@ -18,6 +18,7 @@ import {CHAT_MESSAGE_LENGTH, CHAT_TARGET_TYPE} from '../../shared/models/ChatMod
 import {chatMessageRequest} from '../../shared/actions/actions';
 import GameStyles from "./game/GameStyles";
 import IgnoreUnignoreTooltip from "../components/IgnoreUnignoreTooltip";
+import User from "./utils/User";
 
 const styles = theme => ({
   root: {
@@ -113,7 +114,7 @@ export const ChatMessage = withStyles(messageStyles)(({classes, message, short})
       , short
     })}>
       <IgnoreUnignoreTooltip userId={from}>
-        <span className={classes.messageLogin}>{fromLogin}</span>
+        <User id={from} login={fromLogin} className={classes.messageLogin} variant='simple'/>
       </IgnoreUnignoreTooltip>
       {!short && <span className={classes.messageTime}> [{TimeService.formatHHMM(timestamp)}]</span>}
       <span className={classes.messageText}>: </span>

@@ -1,29 +1,34 @@
 import React from "react";
+import PropTypes from "prop-types";
 import T from "i18n-react";
 import {compose, setDisplayName, setPropTypes} from "recompose";
-import PropTypes from "prop-types";
-import connect from "react-redux/es/connect/connect";
-import {InteractionTarget} from "../InteractionManager";
-import {DND_ITEM_TYPE} from "../dnd/DND_ITEM_TYPE";
-import {PHASE} from "../../../../shared/models/game/GameModel";
-import PlantModel from "../../../../shared/models/game/evolution/plantarium/PlantModel";
-import AnimatedHOC from "../../../services/AnimationService/AnimatedHOC";
+import cn from "classnames";
 import repeat from "lodash/times";
-import Food, {InteractiveFood} from "../food/Food";
-import InteractiveCover, {Cover} from "../food/Cover";
+import {connect} from "react-redux";
+
 import Typography from "@material-ui/core/Typography/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
-import GameStyles from "../GameStyles";
-import PlantTrait from "./PlantTrait";
-import {TraitModel} from "../../../../shared/models/game/evolution/TraitModel";
-import {CTT_PARAMETER, TRAIT_ANIMAL_FLAG, TRAIT_TARGET_TYPE} from "../../../../shared/models/game/evolution/constants";
-import {gameDeployPlantTraitRequest} from "../../../../shared/actions/game";
-import cn from "classnames";
+
+import {DND_ITEM_TYPE} from "../../game/dnd/DND_ITEM_TYPE";
 import {AT_DEATH} from "../animations";
-import IconFruit from '@material-ui/icons/Camera';
-import * as pt from "../../../../shared/models/game/evolution/plantarium/plantTypes";
+import {CTT_PARAMETER, TRAIT_TARGET_TYPE} from "../../../../shared/models/game/evolution/constants";
+import {InteractionTarget} from "../InteractionManager";
+import AnimatedHOC from "../../../services/AnimationService/AnimatedHOC";
+
+import Food, {InteractiveFood} from "../food/Food";
+import InteractiveCover, {Cover} from "../food/Cover";
+import PlantTrait from "./PlantTrait";
+
+import PlantModel from "../../../../shared/models/game/evolution/plantarium/PlantModel";
+import {TraitModel} from "../../../../shared/models/game/evolution/TraitModel";
 import * as ptt from "../../../../shared/models/game/evolution/plantarium/plantTraitTypes";
+import * as pt from "../../../../shared/models/game/evolution/plantarium/plantTypes";
 import {traitActivateRequest} from "../../../../shared/actions/trait";
+import {gameDeployTraitRequest} from "../../../../shared/actions/game";
+
+import GameStyles from "../GameStyles";
+import IconFruit from '@material-ui/icons/Apple';
+import Tooltip from "@material-ui/core/Tooltip";
 
 const DEATH_ANIMATION_TIME = `${AT_DEATH}ms`;
 
@@ -34,8 +39,9 @@ const styles = ({
     , textAlign: 'center'
 
     , '& .PlantIcon': {
-      verticalAlign: 'middle',
-      fill: '#660'
+      verticalAlign: 'text-bottom',
+      fill: '#6A0',
+      width: '22px'
     }
 
     , transition: 'background-color 1s'
@@ -90,7 +96,11 @@ class BasePlant extends React.PureComponent {
       <div className={cnPlant} onClickCapture={acceptInteraction}>
         <Typography className={classes.name}>
           {T.translate(`Game.Plant.${plant.type}`)}
-          {plant.isFruit() && <IconFruit className='PlantIcon' />}
+          {plant.isFruit() && (
+            <Tooltip title={T.translate('Game.Icon.Fruit')}>
+              <IconFruit className='PlantIcon'/>
+            </Tooltip>
+          )}
           {/*{plant.getNextFood(game, plant)}*/}
         </Typography>
         <div className={classes.food}>
@@ -127,7 +137,7 @@ const InteractivePlant = compose(
   , connect(({game}, {plant}) => {
     return {game}
   }, {
-    gameDeployPlantTraitRequest
+    gameDeployTraitRequest
     , traitActivateRequest
   })
   , InteractionTarget([DND_ITEM_TYPE.CARD_TRAIT, DND_ITEM_TYPE.PLANT_LINK, DND_ITEM_TYPE.TRAIT], {
@@ -146,14 +156,14 @@ const InteractivePlant = compose(
           if (!(traitData.cardTargetType & CTT_PARAMETER.PLANT)) {
             return false;
           }
-          return !traitData.getErrorOfTraitPlacement(game, plant);
+          return !traitData.getErrorOfTraitPlacement(plant);
         }
         case DND_ITEM_TYPE.PLANT_LINK: {
           const {traitType, plantId, alternateTrait} = item;
-          const sourcePlant = game.getPlant(plantId);
+          const sourceEntity = game.getEntity(plantId);
           return (
-            plant !== sourcePlant
-            && !TraitModel.LinkBetweenCheck(traitType, sourcePlant, plant)
+            plant !== sourceEntity
+            && !TraitModel.LinkBetweenCheck(traitType, sourceEntity, plant)
           );
         }
       }
@@ -162,14 +172,14 @@ const InteractivePlant = compose(
     , onInteract: ({
                      game
                      , plant
-                     , gameDeployPlantTraitRequest
+                     , gameDeployTraitRequest
                      , traitActivateRequest
                    }, {type, item}) => {
       switch (type) {
         case DND_ITEM_TYPE.CARD_TRAIT: {
           const {cardId, traitType, alternateTrait} = item;
           const traitDataModel = TraitModel.new(traitType).getDataModel();
-          if (traitDataModel.cardTargetType & CTT_PARAMETER.LINK) {
+          if (traitDataModel.linkTargetType) {
             return {
               type: DND_ITEM_TYPE.PLANT_LINK
               , item: {
@@ -178,13 +188,13 @@ const InteractivePlant = compose(
               }
             };
           } else {
-            gameDeployPlantTraitRequest(cardId, plant.id, alternateTrait);
+            gameDeployTraitRequest(cardId, plant.id, alternateTrait);
           }
           break;
         }
         case DND_ITEM_TYPE.PLANT_LINK: {
           const {cardId, alternateTrait, plantId} = item;
-          gameDeployPlantTraitRequest(cardId, plantId, alternateTrait, plant.id);
+          gameDeployTraitRequest(cardId, plantId, alternateTrait, plant.id);
           break;
         }
         case DND_ITEM_TYPE.TRAIT: {

@@ -18,13 +18,13 @@ import {
 
 import Typography from "@material-ui/core/Typography/Typography";
 import Grid from "@material-ui/core/Grid/Grid";
-import Paper from "@material-ui/core/Paper/Paper";
+import Tooltip from "@material-ui/core/Tooltip/Tooltip";
+import IconButton from "@material-ui/core/IconButton/IconButton";
 import withStyles from "@material-ui/core/styles/withStyles";
+import Paper from "@material-ui/core/Paper";
 
 import IconUnbanUser from '@material-ui/icons/RemoveCircleOutline';
 
-import Tooltip from "@material-ui/core/Tooltip/Tooltip";
-import IconButton from "@material-ui/core/IconButton/IconButton";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import {UserVariants} from "../players/User";
 
@@ -53,8 +53,14 @@ export class Room extends React.PureComponent {
   renderUser = ({user}) => {
     const {roomKickRequest, roomBanRequest, isHost, userId} = this.props;
     return (
-      <UserVariants.listItemWithActions user={user} userId={userId} isHost={isHost} roomKickRequest={roomKickRequest}
-                                        roomBanRequest={roomBanRequest} />
+      <UserVariants.listItemWithActions
+        showAuth
+        user={user}
+        userId={userId}
+        isHost={isHost}
+        roomKickRequest={roomKickRequest}
+        roomBanRequest={roomBanRequest}
+      />
     );
   };
 
@@ -64,7 +70,7 @@ export class Room extends React.PureComponent {
       <UserVariants.listItem user={user} actions={
         user.id !== userId && isHost && <ListItemSecondaryAction>
           <Tooltip title={T.translate('App.Room.$Unban')}>
-            <IconButton onClick={() => roomUnbanRequest(user.id)}><IconUnbanUser /></IconButton>
+            <IconButton onClick={() => roomUnbanRequest(user.id)}><IconUnbanUser/></IconButton>
           </Tooltip>
         </ListItemSecondaryAction>}
       />);
@@ -74,20 +80,20 @@ export class Room extends React.PureComponent {
     const {classes, room} = this.props;
     return (
       <Grid container direction='column' wrap='nowrap' item className={classes.root}>
-        <RoomStartVotingDialog />
+        <RoomStartVotingDialog/>
         <Typography variant='h3'>
           {/*{T.translate('App.Room.Room')}&nbsp;«{room.name}»&nbsp;*/}
-          <RoomStartVotingTimer room={room} />
+          <RoomStartVotingTimer room={room}/>
         </Typography>
         <Grid container className={classes.container} spacing={1}>
           <Grid container item className={classes.column} md={4} xs={12}>
             <Paper className={classes.columnPaper + ' ' + classes.columnSettings}>
-              <RoomSettings roomId={room.id} />
+              <RoomSettings roomId={room.id}/>
             </Paper>
           </Grid>
           <Grid container item className={classes.column} md={4} xs={12}>
             <Paper className={classes.columnPaper}>
-              <Chat chatTargetType='ROOM' roomId={room.id} />
+              <Chat chatTargetType='ROOM' roomId={room.id}/>
             </Paper>
           </Grid>
           <Grid container item className={classes.column} md={4} xs={12}>

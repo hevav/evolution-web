@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import T from 'i18n-react';
 import cn from 'classnames';
 import {connect} from "react-redux";
+import {branch, compose, renderNothing} from "recompose";
 
 import Button from '@material-ui/core/Button';
 
@@ -43,7 +44,6 @@ export class GameScoreboardFinal extends React.PureComponent {
     super(props);
     this.state = {show: false};
     this.showedOnce = false;
-    console.log(this.showedOnce, this.props.game.status.phase)
   }
 
   componentDidMount() {
@@ -55,7 +55,6 @@ export class GameScoreboardFinal extends React.PureComponent {
   }
 
   tryToShow() {
-    console.log(this.showedOnce, this.props.game.status.phase)
     if (!this.showedOnce && this.props.game.status.phase === PHASE.FINAL) {
       this.showedOnce = true;
       this.setState({show: true});
