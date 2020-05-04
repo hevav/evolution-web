@@ -1,4 +1,5 @@
 import logger from '../../../shared/utils/logger';
+import * as tt from "../../models/game/evolution/traitTypes";
 
 import {makeGameSelectors} from '../../selectors'
 import {
@@ -8,7 +9,6 @@ import {
   traitTakeFoodRequest
 } from "../trait";
 import {gameEndTurnRequest} from "../game";
-import * as tt from "../../models/game/evolution/traitTypes";
 import {TRAIT_ANIMAL_FLAG} from "../../models/game/evolution/constants";
 import {PHASE} from "../../models/game/GameModel";
 import {gamePlantAttackRequest} from "../game.plantarium";
@@ -96,7 +96,7 @@ players:
         expect(selectGame().hunts, 'Game.hunts').size(0)
       });
 
-      it(`Anglerfish denies animal of getting the food`, () => {
+      it(`Anglerfish denies plant of getting the food`, () => {
         const [{serverStore, ParseGame}, {clientStore0}] = mockGame(1);
         const gameId = ParseGame(`
 settings:
@@ -125,16 +125,16 @@ players:
 settings:
   addon_plantarium: true
 phase: feeding
-plants: PlantCarn $car ++
+plants: PlantPere $per ++
 players:
   - continent: $A, $W wait
   - continent: $B amb carn
 `);
         const {selectGame, findAnimal, findPlant} = makeGameSelectors(serverStore.getState, gameId);
 
-        clientStore0.dispatch(traitTakeFoodRequest('$A', '$car'));
+        clientStore0.dispatch(traitTakeFoodRequest('$A', '$per'));
 
-        // clientStore1.dispatch(traitAmbushActivateRequest('$B'));
+        clientStore1.dispatch(traitAmbushActivateRequest('$B'));
 
         expect(findAnimal('$A'), '$A dead').null;
         expect(findAnimal('$B'), '$B alive').ok;
@@ -433,6 +433,26 @@ players:
       clientStore0.dispatch(gameEndTurnRequest());
 
       expect(findPlant('$carA'), '$carA should be dead').undefined;
+    });
+
+    it(`Attack on anglerfish`, () => {
+      const [{serverStore, ParseGame}, {clientStore0}] = mockGame(1);
+      const gameId = ParseGame(`
+settings:
+  addon_plantarium: true
+phase: feeding
+plants: PlantCarn $car ++
+players:
+  - continent: $A angler, $W wait
+`);
+      const {selectGame, findAnimal, findPlant} = makeGameSelectors(serverStore.getState, gameId);
+
+      clientStore0.dispatch(gamePlantAttackRequest('$car', '$A'));
+
+
+      expect(findAnimal('$A'), '$A is alive').ok;
+      expect(findAnimal('$A').getFood(), '$A.food').equals(1);
+      expect(selectGame().hunts, 'Game.hunts').size(0)
     });
   });
 });

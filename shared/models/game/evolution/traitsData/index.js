@@ -31,7 +31,7 @@ import * as tt from '../traitTypes';
 import {TraitCarnivorous} from './TraitCarnivorous';
 import {huntSetFlag, server$huntEnd, server$huntProcess} from "./hunt";
 import {getErrorOfAnimalEatingFromPlantNoCD} from "../../../../actions/trait.checks";
-import {server$activateViviparous} from "../../../../actions/trait";
+import {server$activateViviparous, server$checkForViviparous} from "../../../../actions/trait";
 
 export {TraitCarnivorous};
 export * from './ttf';
@@ -123,6 +123,8 @@ export const TraitMimicry = {
   }
   , action: (game, mimicryAnimal, traitMimicry, newTargetAnimal, attackAnimal, attackTrait) => (dispatch, getState) => {
     dispatch(server$traitStartCooldown(game.id, traitMimicry, mimicryAnimal));
+    // dispatch(huntSetTarget(game.id, newTargetAnimal));
+    // dispatch(server$huntProcess(game.id));
     dispatch(server$traitActivate(game.id, attackAnimal.id, attackTrait, newTargetAnimal));
     return false;
   }
@@ -187,11 +189,15 @@ export const TraitTailLoss = {
   //   // return targets > 0;
   // }
   , action: (game, targetAnimal, trait, targetTrait, attackAnimal, attackTrait) => (dispatch, getState) => {
-    dispatch(server$traitAnimalRemoveTrait(game, targetAnimal, targetTrait));
 
-    dispatch(huntSetFlag(game.id, HUNT_FLAG.FEED_FROM_TAIL_LOSS));
+    dispatch(server$checkForViviparous(game.id, targetAnimal.id, () => {
+      dispatch(server$traitAnimalRemoveTrait(game, targetAnimal, targetTrait));
 
-    dispatch(server$huntEnd(game.id));
+      dispatch(huntSetFlag(game.id, HUNT_FLAG.FEED_FROM_TAIL_LOSS));
+
+      dispatch(server$huntEnd(game.id));
+    }));
+
     return true;
   }
 };

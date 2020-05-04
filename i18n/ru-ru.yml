@@ -33,6 +33,9 @@ App:
                <br/><br/>Список изменений: <a href="https://github.com/ivan-work/evolution-web/blob/master/changelog.md">https://github.com/ivan-work/evolution-web/blob/master/changelog.md</a>
                <br/><br/>Правила: <a href="https://vk.com/doc-36567706_134818567">https://vk.com/doc-36567706_134818567</a>
                <br/><br/>Правила растений: <a href="https://hobbyworld.ru/download/rules/evo-plant_rus.pdf">https://hobbyworld.ru/download/rules/evo-plant_rus.pdf</a>
+    Ignore: Игнорировать
+    Unignore: Сбросить игнорирование
+    UnignoreAll: Сбросить игнорирование
   Chat:
     Label: Чат
     EnterMessage: ...
@@ -79,6 +82,7 @@ App:
     ErrorKick: Вас кикнули
     ErrorBan: Вас забанили
     Messages:
+      OutputTime: "Время игры: {time}"
       GameEnd: Игра закончена. Поздравляем {winnerName}! Комната самоуничтожится через {time} минуты.
       AfkHostRequest: Привет, хост! Пожалуйста, напиши что-нибудь в чат.
       AfkHostKick: Хост кикнут за АФК.
@@ -110,9 +114,6 @@ Game:
         PLANT_LINK: 'Соедините со вторым растением'
         PLANT_ATTACK: 'Атакуйте животное'
         COVER: 'Положите на животное, чтобы защитить его от атаки'
-    SwitchUI:
-      New: Новый интерфейс
-      Old: Старый интерфейс
     FoodBase: Кормовая база
     SelectLink: Перетащите на другое существо
     EndTurn: Передать ход
@@ -162,6 +163,7 @@ Game:
       AttackedBy: Защищайтесь! Вас атаковал
   Log:
     Label: Лог действий
+    gameNextRound: Новый раунд.
     gameGiveCards:
       0: $Player@{0} получил {1} карту
       1: $Player@{0} получил {1} карты
@@ -205,6 +207,7 @@ Game:
     PlantFungus: Гриб
     PlantCarnivorous: Хищное
     PlantParasite: Растение-паразит
+  Animal: Животное
   AnimalFlag:
     HIBERNATED: Спит zZzZ
     POISONED: Отравлен
@@ -214,12 +217,11 @@ Game:
     SHY: Спрятался
     IN_COVER: В укрытии
   Trait:
-    TraitSymbiosis           : Симбиоз
-    TraitSymbiosisSource     : Симбионт
+    TraitSymbiosis:
+      _: Симбиоз
+      source: Симбионт
     TraitCommunication       : Сотрудничество
-    TraitCommunicationSource : Сотрудничество
     TraitCooperation         : Взаимодействие
-    TraitCooperationSource   : Взаимодействие
     TraitCarnivorous         : Хищник
     TraitParasite            : Паразит
     TraitFatTissue           : Жировой запас
@@ -239,9 +241,10 @@ Game:
 
     TraitShell               : Раковина
     TraitIntellect           : Интеллект
-    TraitAnglerfish          : Удильщик
+    TraitAnglerfish:
+      _: Удильщик
+      value: Защитильщик
     TraitTrematode           : Трематода
-    TraitTrematodeSource     : Трематода
     TraitMetamorphose        : Метаморфоза
     TraitInkCloud            : Чернильное облако
     TraitViviparous          : Живорождение
@@ -250,7 +253,6 @@ Game:
     TraitThermosynthesis     : Термосинтез
     TraitPhotosynthesis      : Фотосинтез
     TraitSpecialization      : Специализация
-    TraitSpecializationSource: Специализация
 
     TraitAedificator         : Эдификатор
     TraitCnidocytes          : Стрекательные клетки
@@ -258,7 +260,6 @@ Game:
     TraitMigration           : Миграция
     TraitNeoplasm            : Неоплазия
     TraitRecombination       : Рекомбинация
-    TraitRecombinationSource : Рекомбинация
     TraitRegeneration        : Регенерация
     TraitSuckerfish          : Прилипала
 

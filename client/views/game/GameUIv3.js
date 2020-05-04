@@ -18,7 +18,6 @@ import PlayersList from "./ui/PlayersList";
 import PlayerUser from "./ui/PlayerUser";
 import Continent from "./continent/Continent";
 
-import {chatMessageRequest} from "../../../shared/actions/chat";
 import {debugMirrorPlayer} from "../../actions/debug";
 import {InteractionContext, InteractionManagerProvider} from './InteractionManager'
 import {CurrentInteractionDebug, CurrentInteractionHelp} from './ui/InteractionManagerHelp'
@@ -30,8 +29,7 @@ import QuestionDefence from "./ui/QuestionDefence";
 import GameStyles from "./GameStyles";
 import FoodWrapper from "./food/FoodWrapper";
 import PlantsContainer from "./plants/PlantsContainer";
-import Typography from "@material-ui/core/Typography/Typography";
-import {List} from "immutable";
+import Typography from "@material-ui/core/Typography";
 
 const styles = theme => ({
   GameUIv3Container: {
@@ -81,7 +79,7 @@ const styles = theme => ({
       , flex: '2 1 25%'
     }
     , '&.Food': {
-      minWidth: 70
+      minWidth: 140
       , maxWidth: 320
     }
     , '&.Compressed': {
@@ -228,28 +226,28 @@ export default compose(
     toggleCompress: ({compress}) => () => ({compress: !compress})
   })
   // debug
-  , connect(null, {debugMirrorPlayer, chatMessageRequest})
-  , lifecycle({
-    mirrorPlayer() {
-      if (process.env.NODE_ENV !== 'development') return;
-      // if (this.props.game.players.size === 1) {
-      //   this.props.debugMirrorPlayer({limit: 10});
-      // }
-      // else if (this.props.game.players.size === 2) {
-      //   this.props.debugMirrorPlayer({limit: 1});
-      // } else if (this.props.game.players.size === 3) {
-      //   this.props.debugMirrorPlayer({limit: 2});
-      // } else if (this.props.game.players.size === 4) {
-      //   this.props.debugMirrorPlayer({limit: 5});
-      // } else if (this.props.game.players.size === 5) {
-      //   this.props.debugMirrorPlayer({limit: 8});
-      // }
-    },
-    componentDidMount() {
-      this.mirrorPlayer();
-    }
-    , componentDidUpdate() {
-      this.mirrorPlayer();
-    }
-  })
+  // , connect(null, {debugMirrorPlayer})
+  // , lifecycle({
+  //   mirrorPlayer() {
+  //     if (process.env.NODE_ENV !== 'development') return;
+  //     // if (this.props.game.players.size === 1) {
+  //     //   this.props.debugMirrorPlayer({limit: 10});
+  //     // }
+  //     // else if (this.props.game.players.size === 2) {
+  //     //   this.props.debugMirrorPlayer({limit: 1});
+  //     // } else if (this.props.game.players.size === 3) {
+  //     //   this.props.debugMirrorPlayer({limit: 2});
+  //     // } else if (this.props.game.players.size === 4) {
+  //     //   this.props.debugMirrorPlayer({limit: 5});
+  //     // } else if (this.props.game.players.size === 5) {
+  //     //   this.props.debugMirrorPlayer({limit: 8});
+  //     // }
+  //   },
+  //   componentDidMount() {
+  //     this.mirrorPlayer();
+  //   }
+  //   , componentDidUpdate() {
+  //     this.mirrorPlayer();
+  //   }
+  // })
 )(GameUIv3);

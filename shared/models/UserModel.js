@@ -1,4 +1,4 @@
-import {Record} from 'immutable';
+import {Map, Record} from 'immutable';
 
 import jwt from 'jsonwebtoken';
 import uuid from 'uuid';
@@ -12,6 +12,10 @@ export const RulesLoginPassword = {
   login: RuleGuestUserName
 };
 
+export const USER_AWARDS = {
+  TOURNEY: 'TOURNEY'
+};
+
 export class UserModel extends Record({
   id: null
   , login: null
@@ -22,12 +26,14 @@ export class UserModel extends Record({
   , rep: null
   , irlName: null
   , regDate: null
+  , awards: Map()
 }) {
   static fromJS(js) {
     return js == null
       ? null
       : new UserModel(js)
-        .set('chat', ChatModel.fromJS(js.chat));
+        .set('chat', ChatModel.fromJS(js.chat))
+        .set('awards', Map(js.awards));
   }
 
   static new(login, connectionId, authType) {
@@ -52,6 +58,7 @@ export class UserModel extends Record({
       , rep: this.rep
       , irlName: this.irlName
       , regDate: this.regDate
+      , awards: this.awards
     });
   }
 

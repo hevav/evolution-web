@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import T from 'i18n-react';
 
 import {compose} from 'recompose';
@@ -6,12 +6,14 @@ import {connect} from 'react-redux';
 import withStyles from "@material-ui/core/styles/withStyles";
 
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import IconCreateRoom from "@material-ui/icons/AddCircle";
 
+import EvoPaper from "../views/utils/EvoPaper";
 import RoomsList from '../views/rooms/RoomsList';
 import Chat from '../views/Chat.jsx';
 
@@ -69,9 +71,9 @@ export const RouteMain = ({classes}) => (
             {T.translate('App.Tournaments')}
           </Typography>
           <div className={classes.roomsListWrapper}>
-            <RoomsList />
+            <RoomsList/>
           </div>
-        </Paper>
+        </EvoPaper>
       </Grid>
       <Grid item xs={12} md={4} className={classes.root}>
         <Paper className={classes.topGrid}>

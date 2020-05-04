@@ -48,20 +48,30 @@ const getHuntingEntity = (game) => {
   return game.locateAnimal(gameGetHunt(game).attackEntityId) || game.getPlant(gameGetHunt(game).attackEntityId);
 };
 
-export const huntStart = (gameId, type, attackEntityId, attackPlayerId) => ({
+const huntStart = (gameId, type, attackEntityId, attackPlayerId, attackTrait) => ({
   type: 'huntStart',
-  data: {gameId, type, attackEntityId, attackPlayerId}
+  data: {
+    gameId
+    , type
+    , attackEntityId
+    , attackPlayerId
+    , attackTraitId: attackTrait.id
+    , attackTraitType: attackTrait.type
+  }
 });
 
-export const huntSetTarget = (gameId, attackTrait, targetAnimal) => ({
+const huntSetTarget = (gameId, targetAnimal) => ({
   type: 'huntSetTarget',
   data: {
     gameId
-    , attackTraitId: attackTrait.id
-    , attackTraitType: attackTrait.type
     , targetAid: targetAnimal.id
     , targetPid: targetAnimal.ownerId
   }
+});
+
+export const allHuntsSetFlag = (gameId, key) => ({
+  type: 'allHuntsSetFlag',
+  data: {gameId, key}
 });
 
 export const huntSetFlag = (gameId, key) => ({
@@ -83,14 +93,14 @@ const noopIfProd = (fn) => process.env.NODE_ENV === 'production' ? () => `#NOOP`
 
 const debugHuntFlags = noopIfProd((game) => `(${gameGetHunt(game).flags.toJS()})`);
 
-const debugHunts = noopIfProd((game) => `(${game.hunts.map(hunt => `${hunt.attackEntityId} > ${hunt.targetAid} ${debugHuntFlags(game)}`).toArray()})`);
+const debugHunts = noopIfProd((game) => `(${game.hunts.map(hunt => `${hunt.attackEntityId} > ${hunt.targetAid} (${hunt.flags.toJS()})`).toArray()})`);
 
 const server$huntStart = (gameId, type, attackPid, attackEntity, attackTrait, targetAnimal, ...flags) => (dispatch, getState) => {
   let game = selectGame(getState, gameId);
   logger.verbose(`server$huntStart: ${attackEntity.id} > ${targetAnimal.id}`);
   // dispatch(server$game(gameId, huntStart(gameId, attackEntity.id, attackTrait.id, targetAnimal.id)));
-  dispatch(huntStart(gameId, type, attackEntity.id, attackPid));
-  dispatch(huntSetTarget(gameId, attackTrait, targetAnimal));
+  dispatch(huntStart(gameId, type, attackEntity.id, attackPid, attackTrait));
+  dispatch(huntSetTarget(gameId, targetAnimal));
 
   flags.forEach((flag) =>
     dispatch(huntSetFlag(gameId, flag))
@@ -131,7 +141,9 @@ export const server$huntProcess = (gameId) => (dispatch, getState) => {
     dispatch(server$traitAnimalRemoveTrait(game, animalAnglerfish, traitAnglerfish));
 
     dispatch(server$traitAnimalAttachTrait(game, animalAnglerfish, newTraitCarnivorous));
-    dispatch(server$traitAnimalAttachTrait(game, animalAnglerfish, newTraitIntellect));
+    if (hunt.type === HUNT_TYPE.ANIMAL) {
+      dispatch(server$traitAnimalAttachTrait(game, animalAnglerfish, newTraitIntellect));
+    }
 
     game = selectGame(getState, gameId);
 
@@ -147,11 +159,16 @@ export const server$huntProcess = (gameId) => (dispatch, getState) => {
         }
         break;
       case HUNT_TYPE.PLANT:
+        dispatch(huntSetFlag(gameId, HUNT_FLAG.TRAIT_ANGLERFISH));
         dispatch(server$huntEnd(gameId));
         const newGame = selectGame(getState, gameId);
         const newPlant = newGame.getPlant(attackEntity.id);
         const anglerfishShouldEat = (
           animalAnglerfish.id !== targetAnimal.id
+          && !getErrorOfAnimalEatingFromPlantNoCD(newGame, animalAnglerfish, newPlant)
+        ) || (
+          animalAnglerfish.id === targetAnimal.id
+          && huntGetFlag(game, HUNT_FLAG.PLANT_ATTACK)
           && !getErrorOfAnimalEatingFromPlantNoCD(newGame, animalAnglerfish, newPlant)
         );
         logger.debug(`server$huntProcess/Anglerfish/anglerfishShouldEat/${animalAnglerfish.id}: ${anglerfishShouldEat}`);
@@ -394,14 +411,6 @@ export const server$huntEnd = (gameId) => (dispatch, getState) => {
     dispatch(server$traitNotify_End(gameId, hunt.attackEntityId, attackTrait, hunt.targetAid));
   }
 
-  if (huntGetFlag(game, HUNT_FLAG.AMBUSH)) {
-    dispatch(clearCooldown(gameId, TRAIT_COOLDOWN_LINK.EATING, TRAIT_COOLDOWN_PLACE.PLAYER, hunt.attackPlayerId));
-    dispatch(traitAmbushActivate(gameId, hunt.attackEntityId, false));
-    dispatch(server$gameAmbushAttackStart(gameId));
-  }
-
-  logger.verbose(`server$huntEnd [END]: ${debugHunts(game)}`);
-
   if (gameGetHunt(selectGame(getState, gameId))) {
     logger.info(`ENDING ANOTHER HUNT: ${debugHunts(game)}`);
     dispatch(server$huntEnd(gameId));
@@ -413,5 +422,13 @@ export const server$huntEnd = (gameId) => (dispatch, getState) => {
     huntGetFlag(game, HUNT_FLAG.FEED_FROM_PLANT)
   ) {
     dispatch(server$playerActed(gameId, hunt.targetPid, 'FEED_FROM_PLANT'));
+  }
+
+  logger.verbose(`server$huntEnd [END]: ${debugHunts(game)}`);
+
+  if (huntGetFlag(game, HUNT_FLAG.AMBUSH)) {
+    dispatch(clearCooldown(gameId, TRAIT_COOLDOWN_LINK.EATING, TRAIT_COOLDOWN_PLACE.PLAYER, hunt.attackPlayerId));
+    dispatch(traitAmbushActivate(gameId, hunt.attackEntityId, false));
+    dispatch(server$gameAmbushAttackStart(gameId));
   }
 };

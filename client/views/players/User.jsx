@@ -6,10 +6,11 @@ import {connect} from 'react-redux';
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import Tooltip from "@material-ui/core/Tooltip/Tooltip";
+import Tooltip from "@material-ui/core/Tooltip";
 import T from "i18n-react";
 
 import PersonIcon from '@material-ui/icons/Person';
+import StarIcon from '@material-ui/icons/Star';
 import IconButton from "@material-ui/core/IconButton";
 import IconKickUser from '@material-ui/icons/Clear';
 import IconBanUser from '@material-ui/icons/Block';
@@ -21,6 +22,7 @@ import {SvgIcon} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import MenuItem from "@material-ui/core/MenuItem";
 import Grid from "@material-ui/core/Grid";
+import {USER_AWARDS} from "../../../shared/models/UserModel";
 
 const defaultUser = (id) => ({
   id, login: '---'
@@ -32,18 +34,30 @@ const cnUser = (user, className = '') => cn(
   , {auth: user.authType}
 );
 
+const getUserIcon = (user, showIcon) => {
+  if (user && showIcon) {
+    // this shit doesn't work somehow
+    // if (user.getIn(['awards', USER_AWARDS.TOURNEY])) {
+    //   return (<StarIcon className='icon' />);
+    // } else
+    if (user.authType) {
+      return (<PersonIcon className='icon'/>);
+    }
+  }
+};
+
 export const UserVariants = {
-  simple: ({user, login, showAuth, className}) => (
+  simple: ({user, login, showIcon, className}) => (
     <span className={cnUser(user, className)}>
-      {showAuth && user.authType && (<PersonIcon className='icon'/>)}{login || user.login}
+      {getUserIcon(user, showIcon)}{login || user.login}
     </span>
   )
-  , typography: ({user, login, showAuth, className}) => (
+  , typography: ({user, login, showIcon, className}) => (
     <Typography display='inline'
                 className={cnUser(user, className)}
                 color='inherit'
                 component='span'>
-      {showAuth && user.authType && (<PersonIcon className='icon'/>)}{login || user.login}
+      {getUserIcon(user, showIcon)}{login || user.login}
     </Typography>
   )
   , listItem: (props) => {
@@ -93,6 +107,8 @@ export const UserConnected = connect(
     , user: state.getIn(['online', id], defaultUser(id))
   })
 )(({children, variant, ...props}) => children ? children(props) : UserVariants[variant](props));
+
+UserConnected.displayName = 'UserConnected';
 
 UserConnected.propTypes = {
   id: PropTypes.string.isRequired,

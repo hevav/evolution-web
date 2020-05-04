@@ -1,22 +1,25 @@
 import React from 'react';
 import T from 'i18n-react';
-import {connect} from 'react-redux';
-import {compose} from 'recompose';
 
 import MUIAppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
 
+import IconMenu from '@material-ui/icons/Menu';
 import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
 import {withStyles} from '@material-ui/core/styles';
 
 import EvoLink from "../../components/EvoLink";
 
+import AppBarMenu from "./AppBarMenu";
+
 import AdminControlGroup from '../../components/AdminControlGroup.jsx'
+import LinkProfile from "../../components/profile/LinkProfile";
+import GuardUser from "../../components/GuardUser";
+
 import RoomControlGroup from "../../views/rooms/RoomControlGroup";
 import GameScoreboardFinal from "../../views/game/ui/GameScoreboardFinal";
-import AppBarMenu from "./AppBarMenu";
-import IconMenu from '@material-ui/icons/Menu';
+
 import {SettingVolumeMenuItem} from "./SettingVolume";
 import LinkProfile from "../../components/profile/LinkProfile";
 import GuardUser from "../../components/GuardUser";
@@ -28,6 +31,7 @@ import List from "@material-ui/core/List";
 import gecko from "../../assets/gfx/gecko-080.svg";
 import clsx from "clsx";
 import MenuItem from "@material-ui/core/MenuItem";
+import SettingUnignoreAll from "./SettingUnignoreAll";
 
 const styles = theme => ({
   title: {
@@ -129,6 +133,7 @@ export const AppBar = function ({classes}) {
         <SettingVolumeMenuItem showText={showText}/>
         <LinkProfile showText={showText}/>
         <Profile showText={showText}/>
+          <SettingUnignoreAll />
         <RoomControlGroup showText={showText}/>
         <GameScoreboardFinal showText={showText}/>
         <AdminControlGroup showText={showText}/>

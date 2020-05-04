@@ -32,8 +32,7 @@ import {
   getAffectiveDefenses
 } from './TraitCarnivorous';
 import * as tt from '../traitTypes';
-import {TraitMimicry, TraitTailLoss} from "./index";
-import {huntSetFlag, server$huntEnd} from "./hunt";
+import {allHuntsSetFlag, huntSetFlag, server$huntEnd} from "./hunt";
 
 export const TraitMetamorphose = {
   type: tt.TraitMetamorphose
@@ -120,7 +119,7 @@ export const TraitInkCloud = {
     ]));
 
     dispatch(server$traitStartCooldown(game.id, defenseTrait, defenseAnimal));
-    dispatch(huntSetFlag(game.id, HUNT_FLAG.TRAIT_INK_CLOUD));
+    dispatch(allHuntsSetFlag(game.id, HUNT_FLAG.TRAIT_INK_CLOUD));
     dispatch(server$huntEnd(game.id));
     return true;
   }
@@ -185,9 +184,6 @@ export const TraitViviparous = {
   type: tt.TraitViviparous
   , targetType: TRAIT_TARGET_TYPE.NONE
   , food: 1
-  // , cooldowns: fromJS([
-  //   [tt.TraitViviparous, TRAIT_COOLDOWN_PLACE.TRAIT, TRAIT_COOLDOWN_DURATION.TURN]
-  // ])
   , action: (game, sourceAnimal, trait) => (dispatch) => {
     // dispatch(server$traitStartCooldown(game.id, trait, sourceAnimal));
     dispatch(server$gameDeployAnimalFromDeck(game.id, sourceAnimal, animal => animal.set('food', 1)));
