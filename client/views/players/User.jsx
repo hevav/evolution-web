@@ -73,8 +73,7 @@ export const UserVariants = {
                 <Grid container style={{justifyContent: "space-between"}}>
                     <Grid item>
                         <Typography>
-                            { (user.authType === "Form") ? <AccountBoxIcon style={{verticalAlign: 'middle', fontSize: "18px", height: "14px", margin: "2px"}}/> : (user.authType === "VK")? <img src={VKIcon} style={{verticalAlign: 'middle', height: "14px", margin: "2px"}}/> : ""}
-                            {user.login}
+                            {user.authType && (<PersonIcon className='icon'/>)}{user.login}
                         </Typography>
                     </Grid>
                     <Grid item>

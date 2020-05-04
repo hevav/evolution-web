@@ -18,6 +18,7 @@ import Chat from '../views/Chat.jsx';
 import {roomCreateRequest} from '../../shared/actions/actions';
 import OnlineWidget from "../views/players/OnlineWidget";
 import TopList from "../views/players/TopList";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const styles = theme => ({
   columnPaper: {
@@ -62,7 +63,14 @@ export const RouteMain = ({classes}) => (
     <Grid direction={(innerWidth < 1000)?"column":"row"} item container spacing={1}>
       <Grid item xs={12} md={4} className={classes.root}>
         <Paper className={classes.topGrid}>
-          <Typography variant="h4">{T.translate('App.Tournaments')}</Typography>
+          <Typography
+              className={classes.columnTitle}
+              variant="h4">
+            {T.translate('App.Tournaments')}
+          </Typography>
+          <div className={classes.roomsListWrapper}>
+            <RoomsList />
+          </div>
         </Paper>
       </Grid>
       <Grid item xs={12} md={4} className={classes.root}>
